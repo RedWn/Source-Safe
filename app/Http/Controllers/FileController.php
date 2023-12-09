@@ -36,7 +36,7 @@ class FileController extends Controller
         } catch (\Exception $e) {
             return response()->json(['msg' => $e->getMessage()], 400);
         }
-        $serverPath = FileManager::storeFile($file, $dbfile['id'], $pID);
+        $serverPath = FileManager::storeFile($file, $dbfile['id']);
         $dbfile['serverPath'] = $serverPath;
         return response()->json([
             'msg' => 'File added successfully',
