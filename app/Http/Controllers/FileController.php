@@ -43,6 +43,17 @@ class FileController extends Controller
         ], 201);
     }
 
+    public static function downloadFile(Request $request)
+    {
+        $file = File::where('id', $request->header('fileID'))->first();
+        $file_name = $file["name"];
+        $file_path = $file["serverPath"];
+
+        if (!file_exists(public_path() . $file_path . $file["id"])) {
+            return response()->json(['msg' => "$file_name not found"], 400);
+        }
+        return response()->download(public_path() . $file_path . $file["id"], $name = $file_name);
+    }
     public static function deleteFile(Request $request)
     {
         $id = $request->input("id");
