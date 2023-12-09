@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Custom\FileManager;
 use App\Models\File;
 use Exception;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class FileController extends Controller
         } catch (\Exception $e) {
             return response()->json(['msg' => $e->getMessage()], 400);
         }
-        $serverPath = self::storeFile($file, $dbfile['id'], $pID);
+        $serverPath = FileManager::storeFile($file, $dbfile['id'], $pID);
         $dbfile['serverPath'] = $serverPath;
         return response()->json([
             'msg' => 'File added successfully',
@@ -68,12 +69,5 @@ class FileController extends Controller
         $fileVals = array_unique($fileVals);
 
         return response()->json(['msg' => 'Successed', 'files' => array_values($fileVals)], 200);
-    }
-    private static function storeFile($file, $name, $projectID): string
-    {
-        $fileURL = $projectID . '-' . $name;
-        $filePath = public_path() . $fileURL;
-        move_uploaded_file($file, $filePath);
-        return $filePath;
     }
 }
