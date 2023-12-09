@@ -19,6 +19,7 @@ class CreateFolderTable extends Migration
             $table->id();
             $table->unsignedBigInteger('projectID')->index();
             $table->foreign('projectID')->references('id')->on('project');
+            $table->timestamps();
         });
 
         Schema::enableForeignKeyConstraints();
