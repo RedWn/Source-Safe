@@ -42,6 +42,33 @@ class FileController extends Controller
         ], 201);
     }
 
+    public static function deleteFile(Request $request)
+    {
+        $id = $request->input("id");
+        $name = $request->input("filename");
+        if ($id != "") {
+            if (File::destroy($id))
+                return response()->json(['msg' => 'successed'], 200);
+        } else if ($name != "") {
+            File::destroy($name);
+            return response()->json(['msg' => 'successed'], 200);
+        } else {
+            return response()->json(['msg' => 'please insert id or name'], 400);
+        }
+        return response()->json(['msg' => 'wrong parameters'], 400);
+    }
+
+    public static function getAllFiles()
+    {
+        $files = File::all();
+        $fileVals = [];
+        foreach ($files as $file) {
+            $fileVals[] = $file;
+        }
+        $fileVals = array_unique($fileVals);
+
+        return response()->json(['msg' => 'Successed', 'files' => array_values($fileVals)], 200);
+    }
     private static function storeFile($file, $name, $projectID): string
     {
         $fileURL = $projectID . '-' . $name;

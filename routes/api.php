@@ -19,3 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/addFile', [\App\Http\Controllers\FileController::class, 'addFile']);
+Route::post('/deleteFile', [\App\Http\Controllers\FileController::class, 'deleteFile']);
+Route::get('/getAllFiles', [\App\Http\Controllers\FileController::class, 'getAllFiles']);
