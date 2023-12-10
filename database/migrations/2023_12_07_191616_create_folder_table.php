@@ -15,10 +15,10 @@ class CreateFolderTable extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('folder', function (Blueprint $table) {
+        Schema::create('folders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('projectID')->index();
-            $table->foreign('projectID')->references('id')->on('project');
+            $table->foreign('projectID')->references('id')->on('projects');
             $table->timestamps();
         });
 
@@ -32,6 +32,6 @@ class CreateFolderTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('folder');
+        Schema::dropIfExists('folders');
     }
 }
