@@ -33,7 +33,7 @@ class FilesController extends Controller
                 'name' => $name,
                 'projectID' => $pID,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(['msg' => $e->getMessage()], 400);
         }
         $serverPath = FileManager::storeFile($file, $dbfile['id']);
