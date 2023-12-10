@@ -29,7 +29,11 @@ class AuthController extends Controller
         $token = $user->createToken($request->username)->plainTextToken;
 
         return $this->success([
-            'token' => $token
+            'token' => $token,
+            'user' => [
+                'username' => $user->username,
+                'Note from hasan the dev:' => 'We might include additional fields here.'
+            ]
         ], message: "Login successfull!");
     }
 

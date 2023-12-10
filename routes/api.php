@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Mobile Authentication
+// Public Routes
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
@@ -24,8 +24,8 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::prefix('/files')->group(function () {
         Route::get('/', [\App\Http\Controllers\FilesController::class, 'getAllFiles']);
-        Route::get('/{id}', [\App\Http\Controllers\FilesController::class, 'downloadFile']);
-        Route::delete('/{id}', [\App\Http\Controllers\FilesController::class, 'deleteFile']);
+        Route::get('/{id}', [\App\Http\Controllers\FilesController::class, 'downloadFile'])->whereNumber('id');
+        Route::delete('/{id}', [\App\Http\Controllers\FilesController::class, 'deleteFile'])->whereNumber('id');
         Route::post('/upload', [\App\Http\Controllers\FilesController::class, 'uploadFile']);
     });
 });
