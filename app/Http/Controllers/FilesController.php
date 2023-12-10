@@ -7,9 +7,9 @@ use App\Models\File;
 use Exception;
 use Illuminate\Http\Request;
 
-class FileController extends Controller
+class FilesController extends Controller
 {
-    public static function addFile(Request $request)
+    public static function uploadFile(Request $request)
     {
         try {
             $request->validate([
@@ -43,9 +43,9 @@ class FileController extends Controller
         ], 201);
     }
 
-    public static function downloadFile(Request $request)
+    public static function downloadFile(int $fileId)
     {
-        $file = File::where('id', $request->header('fileID'))->first();
+        $file = File::where('id', $fileId)->first();
         $file_name = $file["name"];
         $file_path = $file["serverPath"];
 
@@ -54,10 +54,10 @@ class FileController extends Controller
         }
         return response()->download(public_path() . $file_path . $file["id"], $name = $file_name);
     }
-    public static function deleteFile(Request $request)
+    public static function deleteFile(Request $request, int $id)
     {
-        $id = $request->input("id");
         $name = $request->input("filename");
+
         if ($id != "") {
             if (File::destroy($id))
                 return response()->json(['msg' => 'successed'], 200);

@@ -19,12 +19,13 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
-
 Route::middleware('auth:sanctum')->group(function() {
     Route::post('/logout', [AuthController::class, 'logout']);
-});
 
-Route::post('/addFile', [\App\Http\Controllers\FileController::class, 'addFile']);
-Route::get('/downloadFile', [\App\Http\Controllers\FileController::class, 'downloadFile']);
-Route::post('/deleteFile', [\App\Http\Controllers\FileController::class, 'deleteFile']);
-Route::get('/getAllFiles', [\App\Http\Controllers\FileController::class, 'getAllFiles']);
+    Route::prefix('/files')->group(function () {
+        Route::get('/', [\App\Http\Controllers\FilesController::class, 'getAllFiles']);
+        Route::get('/{id}', [\App\Http\Controllers\FilesController::class, 'downloadFile']);
+        Route::delete('/{id}', [\App\Http\Controllers\FilesController::class, 'deleteFile']);
+        Route::post('/upload', [\App\Http\Controllers\FilesController::class, 'uploadFile']);
+    });
+});
