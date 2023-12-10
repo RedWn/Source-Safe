@@ -54,7 +54,8 @@ class FilesController extends Controller
     }
     public function deleteFile(int $fileId)
     {
-        if ($fileId != "" && FileManager::deleteFile($fileId)) {
+        if ($fileId != "" && FileManager::exist($fileId)) {
+            FileManager::deleteFile($fileId);
             File::destroy($fileId);
             return $this->success(message: 'successed');
         } else {

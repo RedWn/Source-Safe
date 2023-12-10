@@ -22,4 +22,9 @@ class FileManager
         $file = File::where("id", $fileID)->first();
         return unlink(public_path() . $file["serverPath"] . $fileID);
     }
+
+    public static function exist($fileID): bool
+    {
+        return (File::where("id", $fileID)->first() != null);
+    }
 }
