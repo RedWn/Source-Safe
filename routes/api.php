@@ -19,13 +19,17 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
-Route::middleware('auth:sanctum')->group(function() {
+Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::prefix('/files')->group(function () {
         Route::get('/', [\App\Http\Controllers\FilesController::class, 'getAllFiles']);
-        Route::get('/{id}', [\App\Http\Controllers\FilesController::class, 'downloadFile'])->whereNumber('id');
-        Route::delete('/{id}', [\App\Http\Controllers\FilesController::class, 'deleteFile'])->whereNumber('id');
+        Route::get('/download/{id}', [\App\Http\Controllers\FilesController::class, 'downloadFile']); //this should be download because there will probably a get file by id
+        Route::delete('/{id}', [\App\Http\Controllers\FilesController::class, 'deleteFile']);
         Route::post('/upload', [\App\Http\Controllers\FilesController::class, 'uploadFile']);
+        Route::post('/checkOut', [\App\Http\Controllers\CheckController::class, 'checkoutFile']);
+        Route::post('/AutoCheckOut', [\App\Http\Controllers\CheckController::class, 'checkoutFileAuto']);
+
     });
+
 });

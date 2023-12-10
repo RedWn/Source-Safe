@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class FilesController extends Controller
 {
-    public static function uploadFile(Request $request)
+    public function uploadFile(Request $request)
     {
         try {
             $request->validate([
@@ -33,14 +33,12 @@ class FilesController extends Controller
                 'name' => $name,
                 'projectID' => $pID,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(['msg' => $e->getMessage()], 400);
         }
         $serverPath = FileManager::storeFile($file, $dbfile['id']);
         $dbfile['serverPath'] = $serverPath;
-        return response()->json([
-            'msg' => 'File added successfully',
-        ], 201);
+        return $this->success(message: 'File added successfully', status: 201);
     }
 
     public static function downloadFile(int $fileId)
@@ -54,23 +52,18 @@ class FilesController extends Controller
         }
         return response()->download(public_path() . $file_path . $file["id"], $name = $file_name);
     }
-    public static function deleteFile(Request $request, int $id)
+    public function deleteFile(int $fileId)
     {
-        $name = $request->input("filename");
-
-        if ($id != "") {
-            if (File::destroy($id))
-                return response()->json(['msg' => 'successed'], 200);
-        } else if ($name != "") {
-            File::destroy($name);
-            return response()->json(['msg' => 'successed'], 200);
+        if ($fileId != "" && FileManager::exist($fileId)) {
+            FileManager::deleteFile($fileId);
+            File::destroy($fileId);
+            return $this->success(message: 'successed');
         } else {
-            return response()->json(['msg' => 'please insert id or name'], 400);
+            return response()->json(['msg' => 'please insert valid id'], 400);
         }
-        return response()->json(['msg' => 'wrong parameters'], 400);
     }
 
-    public static function getAllFiles()
+    public function getAllFiles()
     {
         $files = File::all();
         $fileVals = [];
@@ -79,6 +72,6 @@ class FilesController extends Controller
         }
         $fileVals = array_unique($fileVals);
 
-        return response()->json(['msg' => 'Successed', 'files' => array_values($fileVals)], 200);
+        return $this->success($fileVals, 'Successed');
     }
 }
