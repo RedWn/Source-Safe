@@ -26,12 +26,17 @@ class AuthController extends Controller
             ]);
         }
 
-        return $user->createToken($request->username)->plainTextToken;
+        $token = $user->createToken($request->username)->plainTextToken;
+
+        return $this->success([
+            'token' => $token
+        ], message: "Login successfull!");
     }
 
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
+        return $this->success(message: "Logout successfully", status: 200);
     }
 
     public function register(Request $request)
@@ -43,6 +48,11 @@ class AuthController extends Controller
 
         $user = User::create($validated);
 
-        return $user->createToken($request->username)->plainTextToken;
+        $token = $user->createToken($request->username)->plainTextToken;
+        return $this->success(
+            ['token' => $token],
+            'User registered succesfully',
+            201
+        );
     }
 }
