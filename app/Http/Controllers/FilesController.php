@@ -54,20 +54,14 @@ class FilesController extends Controller
         }
         return response()->download(public_path() . $file_path . $file["id"], $name = $file_name);
     }
-    public static function deleteFile(Request $request, int $id)
+    public function deleteFile(int $fileId)
     {
-        $name = $request->input("filename");
-
-        if ($id != "") {
-            if (File::destroy($id))
-                return response()->json(['msg' => 'successed'], 200);
-        } else if ($name != "") {
-            File::destroy($name);
-            return response()->json(['msg' => 'successed'], 200);
+        if ($fileId != "" && FileManager::deleteFile($fileId)) {
+            File::destroy($fileId);
+            return $this->success(message: 'successed');
         } else {
-            return response()->json(['msg' => 'please insert id or name'], 400);
+            return response()->json(['msg' => 'please insert valid id'], 400);
         }
-        return response()->json(['msg' => 'wrong parameters'], 400);
     }
 
     public static function getAllFiles()
