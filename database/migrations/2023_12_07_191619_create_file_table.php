@@ -23,7 +23,7 @@ class CreateFileTable extends Migration
             $table->foreign('projectID')->references('id')->on('projects');
             $table->unsignedBigInteger('folderID')->index();
             $table->foreign('folderID')->references('id')->on('folders');
-            $table->boolean('checkedOut');
+            $table->boolean('checked');
             $table->timestamps();
         });
 
