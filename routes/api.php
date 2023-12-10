@@ -31,5 +31,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/autoCheckOut', [\App\Http\Controllers\CheckController::class, 'checkoutFileAuto']);
 
     });
-
+    Route::prefix('/folders')->group(function () {
+        Route::get('/{id}', [\App\Http\Controllers\FolderController::class, 'getSubFolders']);
+        Route::post('/new', [\App\Http\Controllers\FolderController::class, 'createFolder']);
+    });
 });
