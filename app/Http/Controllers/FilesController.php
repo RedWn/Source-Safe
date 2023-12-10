@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class FilesController extends Controller
 {
-    public static function uploadFile(Request $request)
+    public function uploadFile(Request $request)
     {
         try {
             $request->validate([
@@ -38,9 +38,7 @@ class FilesController extends Controller
         }
         $serverPath = FileManager::storeFile($file, $dbfile['id']);
         $dbfile['serverPath'] = $serverPath;
-        return response()->json([
-            'msg' => 'File added successfully',
-        ], 201);
+        return $this->success(message: 'File added successfully', status: 201);
     }
 
     public static function downloadFile(int $fileId)
@@ -64,7 +62,7 @@ class FilesController extends Controller
         }
     }
 
-    public static function getAllFiles()
+    public function getAllFiles()
     {
         $files = File::all();
         $fileVals = [];
@@ -73,6 +71,6 @@ class FilesController extends Controller
         }
         $fileVals = array_unique($fileVals);
 
-        return response()->json(['msg' => 'Successed', 'files' => array_values($fileVals)], 200);
+        return $this->success($fileVals, 'Successed');
     }
 }
