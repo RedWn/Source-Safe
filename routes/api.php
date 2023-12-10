@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{id}', [\App\Http\Controllers\FilesController::class, 'deleteFile']);
         Route::post('/upload', [\App\Http\Controllers\FilesController::class, 'uploadFile']);
         Route::post('/checkOut', [\App\Http\Controllers\CheckController::class, 'checkoutFile']);
-        Route::post('/AutoCheckOut', [\App\Http\Controllers\CheckController::class, 'checkoutFileAuto']);
+        Route::post('/autoCheckOut', [\App\Http\Controllers\CheckController::class, 'checkoutFileAuto']);
 
     });
 
