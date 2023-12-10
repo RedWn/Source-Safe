@@ -15,12 +15,12 @@ class CreateLedgerTable extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('ledger', function (Blueprint $table) {
+        Schema::create('ledgers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('userID')->index();
-            $table->foreign('userID')->references('id')->on('user');
+            $table->foreign('userID')->references('id')->on('users');
             $table->unsignedBigInteger('projectID')->index();
-            $table->foreign('projectID')->references('id')->on('project');
+            $table->foreign('projectID')->references('id')->on('projects');
             $table->timestamps();
         });
 
@@ -34,6 +34,6 @@ class CreateLedgerTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ledger');
+        Schema::dropIfExists('ledgers');
     }
 }

@@ -15,15 +15,15 @@ class CreateFileTable extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('file', function (Blueprint $table) {
+        Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('projectPath');
             $table->string('serverPath');
             $table->unsignedBigInteger('projectID')->index();
-            $table->foreign('projectID')->references('id')->on('project');
+            $table->foreign('projectID')->references('id')->on('projects');
             $table->unsignedBigInteger('folderID')->index()->nullable();
-            $table->foreign('folderID')->references('id')->on('folder');
+            $table->foreign('folderID')->references('id')->on('folders');
             $table->timestamps();
         });
 
@@ -37,6 +37,6 @@ class CreateFileTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('file');
+        Schema::dropIfExists('files');
     }
 }

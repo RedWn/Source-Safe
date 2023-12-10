@@ -15,14 +15,14 @@ class CreateCheckinTable extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('checkin', function (Blueprint $table) {
+        Schema::create('checkins', function (Blueprint $table) {
             $table->id();
             $table->timestamp('date');
             $table->unsignedBigInteger('fileID')->index();
-            $table->foreign('fileID')->references('id')->on('file');
+            $table->foreign('fileID')->references('id')->on('files');
             $table->unsignedBigInteger('duration');
             $table->unsignedBigInteger('userID')->index();
-            $table->foreign('userID')->references('id')->on('user');
+            $table->foreign('userID')->references('id')->on('users');
             $table->boolean('checkedOut');
             $table->timestamps();
         });
@@ -37,6 +37,6 @@ class CreateCheckinTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('checkin');
+        Schema::dropIfExists('checkins');
     }
 }
