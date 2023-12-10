@@ -18,6 +18,7 @@ class CreateProjectTable extends Migration
         Schema::create('project', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->timestamps();
         });
 
         Schema::enableForeignKeyConstraints();

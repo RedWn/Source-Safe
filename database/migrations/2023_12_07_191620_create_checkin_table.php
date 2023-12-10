@@ -23,6 +23,8 @@ class CreateCheckinTable extends Migration
             $table->unsignedBigInteger('duration');
             $table->unsignedBigInteger('userID')->index();
             $table->foreign('userID')->references('id')->on('user');
+            $table->boolean('checkedOut');
+            $table->timestamps();
         });
 
         Schema::enableForeignKeyConstraints();

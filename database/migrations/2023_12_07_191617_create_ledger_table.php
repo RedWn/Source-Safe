@@ -21,6 +21,7 @@ class CreateLedgerTable extends Migration
             $table->foreign('userID')->references('id')->on('user');
             $table->unsignedBigInteger('projectID')->index();
             $table->foreign('projectID')->references('id')->on('project');
+            $table->timestamps();
         });
 
         Schema::enableForeignKeyConstraints();

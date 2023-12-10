@@ -23,3 +23,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/addFile', [\App\Http\Controllers\FileController::class, 'addFile']);
+Route::get('/downloadFile', [\App\Http\Controllers\FileController::class, 'downloadFile']);
+Route::post('/deleteFile', [\App\Http\Controllers\FileController::class, 'deleteFile']);
+Route::get('/getAllFiles', [\App\Http\Controllers\FileController::class, 'getAllFiles']);

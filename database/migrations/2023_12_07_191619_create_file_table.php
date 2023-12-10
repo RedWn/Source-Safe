@@ -17,11 +17,14 @@ class CreateFileTable extends Migration
 
         Schema::create('file', function (Blueprint $table) {
             $table->id();
-            $table->string('path');
+            $table->string('name');
+            $table->string('projectPath');
+            $table->string('serverPath');
             $table->unsignedBigInteger('projectID')->index();
             $table->foreign('projectID')->references('id')->on('project');
             $table->unsignedBigInteger('folderID')->index()->nullable();
             $table->foreign('folderID')->references('id')->on('folder');
+            $table->timestamps();
         });
 
         Schema::enableForeignKeyConstraints();
