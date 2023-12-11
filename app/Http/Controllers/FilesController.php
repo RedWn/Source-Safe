@@ -14,8 +14,8 @@ class FilesController extends Controller
         try {
             $request->validate([
                 'file' => 'required|file',
-                'path' => 'required|string',
                 'filename' => 'required|string',
+                'folderID' => 'required',
                 'projectID' => 'required'
 
             ]);
@@ -23,15 +23,16 @@ class FilesController extends Controller
             return response()->json(['message' => $e->getMessage()], 400);
         }
         $file = $request->file("file");
-        $path = $request->input("path");
+        $fID = $request->input("folderID");
         $name = $request->input("filename");
         $pID = $request->input("projectID");
         try {
             $dbfile = File::create([
-                'projectPath' => $path,
                 'serverPath' => '/',
                 'name' => $name,
+                'folderID' => $fID,
                 'projectID' => $pID,
+                'checked' => 0,
             ]);
         } catch (Exception $e) {
             return response()->json(['msg' => $e->getMessage()], 400);

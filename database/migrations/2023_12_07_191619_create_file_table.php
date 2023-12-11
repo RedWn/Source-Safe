@@ -18,12 +18,12 @@ class CreateFileTable extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('projectPath');
             $table->string('serverPath');
             $table->unsignedBigInteger('projectID')->index();
             $table->foreign('projectID')->references('id')->on('projects');
-            $table->unsignedBigInteger('folderID')->index()->nullable();
+            $table->unsignedBigInteger('folderID')->index();
             $table->foreign('folderID')->references('id')->on('folders');
+            $table->boolean('checked');
             $table->timestamps();
         });
 
