@@ -34,18 +34,9 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof ModelNotFoundException) {
             // Sample message: "No query results for model [App\Models\File] 1, 2, 3, 4"
-            // Extract model name and the rest of the message after the last bracket into the error message;
-            $originalMessage = $exception->getMessage();
+            $contentAfterLastBracket = substr($exception->getMessage(), strrpos($exception->getMessage(), "]") + 1);
 
-            preg_match('/\[(.*?)\]/', $originalMessage, $matches);
-            $contentBetweenBrackets = $matches[1];
-
-            $exploded = explode("\\", $contentBetweenBrackets);
-            $modelName = end($exploded);
-
-            $contentAfterLastBracket = substr($originalMessage, strrpos($originalMessage, "]") + 1);
-
-            $message = "Entry for $modelName $contentAfterLastBracket not found.";
+            $message = "Entry with id(s) $contentAfterLastBracket not found.";
             return response()->json([
                 'message' => $message
             ], 404);
