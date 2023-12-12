@@ -48,14 +48,14 @@ class FilesController extends Controller
         $file_name = $file["name"];
         $file_path = $file["serverPath"];
 
-        if (!file_exists(public_path() . $file_path . $file["id"])) {
+        if (!FileManager::exists($fileId)) {
             return response()->json(['msg' => "$file_name not found"], 400);
         }
-        return response()->download(public_path() . $file_path . $file["id"], $name = $file_name);
+        return response()->download(FileManager::getFilePath($fileId), name: $file_name);
     }
     public function deleteFile(int $fileId)
     {
-        if ($fileId != "" && FileManager::exist($fileId)) {
+        if ($fileId != "" && FileManager::exists($fileId)) {
             FileManager::deleteFile($fileId);
             File::destroy($fileId);
             return $this->success(message: 'successed');
