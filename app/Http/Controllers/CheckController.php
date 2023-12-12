@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Custom\FileManager;
 use App\Models\Checkin;
+use App\Models\File;
 use Illuminate\Http\Request;
 use Exception;
 
@@ -32,6 +33,7 @@ class CheckController extends Controller
             } else {
                 FileManager::storeFile($file, $fileID);
                 Checkin::where("fileID", $fileID)->update(["checkedOut" => 1]);
+                File::where("id", $fileID)->update(["checked" => 0]);
                 return $this->success(message: "file is checked out and updated", status: 201);
             }
         }
@@ -51,6 +53,7 @@ class CheckController extends Controller
                 return response()->json(["message" => "file is not checked in by user"], 403);
             } else {
                 Checkin::where("fileID", $fileID)->update(["checkedOut" => 1]);
+                File::where("id", $fileID)->update(["checked" => 0]);
                 return $this->success(message: "file is checked out and reverted", status: 200);
             }
         }
