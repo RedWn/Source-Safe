@@ -23,7 +23,7 @@ class FolderController extends Controller
         $fID = $request->input("folderID");
         $pID = $request->input("projectID");
         try {
-            Folder::create([
+            $newFolder = Folder::create([
                 'name' => $name,
                 'folderID' => $fID,
                 'projectID' => $pID,
@@ -31,7 +31,7 @@ class FolderController extends Controller
         } catch (Exception $e) {
             return response()->json(['msg' => $e->getMessage()], 400);
         }
-        return $this->success(message: 'Folder added successfully', status: 201);
+        return $this->success(message: 'Folder added successfully', data: $newFolder, status: 201);
     }
 
     public function getSubFolders(int $folderID)
