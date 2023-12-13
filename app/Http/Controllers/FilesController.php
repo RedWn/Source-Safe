@@ -63,16 +63,4 @@ class FilesController extends Controller
             return response()->json(['msg' => 'please insert valid id'], 400);
         }
     }
-
-    public function getAllFiles()
-    {
-        $files = File::all();
-        $fileVals = [];
-        foreach ($files as $file) {
-            $fileVals[] = $file;
-        }
-        $fileVals = array_unique($fileVals);
-
-        return $this->success($fileVals, 'Successed');
-    }
 }
