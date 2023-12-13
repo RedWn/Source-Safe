@@ -12,7 +12,7 @@ class FileManager
 {
     public static function storeFile($file, $name): string
     {
-        $filePath = public_path('storage') . "/" . $name;
+        $filePath = storage_path() . "\\" . $name;
         move_uploaded_file($file, $filePath);
         return $filePath;
     }
@@ -20,12 +20,12 @@ class FileManager
     public static function deleteFile($fileID): bool
     {
         $file = File::where("id", $fileID)->first();
-        return unlink(public_path('storage') . $file["serverPath"] . $fileID);
+        return unlink(storage_path() . $file["serverPath"] . $fileID);
     }
 
     public static function getFilePath($fileID): string
     {
-        return public_path('storage') . "/" . $fileID;
+        return storage_path() . "\\" . $fileID;
     }
 
     public static function exists($fileID): bool
