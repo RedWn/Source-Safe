@@ -12,14 +12,10 @@ class CheckController extends Controller
 {
     public function checkoutFile(Request $request)
     {
-        try {
-            $request->validate([
-                'file' => 'required|file',
-                'fileID' => 'required',
-            ]);
-        } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
-        }
+        $request->validate([
+            'file' => 'required|file',
+            'fileID' => 'required',
+        ]);
         $file = $request->file("file");
         $fileID = $request->input("fileID");
         $checks = Checkin::where("fileID", $fileID)->where('checkedOut', 0)->get();

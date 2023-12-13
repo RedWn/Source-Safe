@@ -11,32 +11,23 @@ class FilesController extends Controller
 {
     public function uploadFile(Request $request)
     {
-        try {
-            $request->validate([
-                'file' => 'required|file',
-                'filename' => 'required|string',
-                'folderID' => 'required',
-                'projectID' => 'required'
-
-            ]);
-        } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
-        }
+        $request->validate([
+            'file' => 'required|file',
+            'filename' => 'required|string',
+            'folderID' => 'required',
+            'projectID' => 'required'
+        ]);
         $file = $request->file("file");
         $fID = $request->input("folderID");
         $name = $request->input("filename");
         $pID = $request->input("projectID");
-        try {
-            $dbfile = File::create([
-                'serverPath' => '/',
-                'name' => $name,
-                'folderID' => $fID,
-                'projectID' => $pID,
-                'checked' => 0,
-            ]);
-        } catch (Exception $e) {
-            return response()->json(['msg' => $e->getMessage()], 400);
-        }
+        $dbfile = File::create([
+            'serverPath' => '/',
+            'name' => $name,
+            'folderID' => $fID,
+            'projectID' => $pID,
+            'checked' => 0,
+        ]);
         $serverPath = FileManager::storeFile($file, $dbfile['id']);
         $dbfile['serverPath'] = $serverPath;
         return $this->success(message: 'File added successfully', status: 201);

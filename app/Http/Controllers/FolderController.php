@@ -11,14 +11,10 @@ class FolderController extends Controller
 {
     public function createFolder(Request $request)
     {
-        try {
-            $request->validate([
-                'name' => 'required|string',
-                'folderID' => 'required',
-            ]);
-        } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
-        }
+        $request->validate([
+            'name' => 'required|string',
+            'folderID' => 'required',
+        ]);
         $name = $request->input("name");
         $fID = $request->input("folderID");
         $pID = $request->input("projectID");
