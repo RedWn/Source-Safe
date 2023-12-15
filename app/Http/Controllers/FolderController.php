@@ -34,17 +34,8 @@ class FolderController extends Controller
     {
         $folders = Folder::where('folderID', $folderID)->get();
         $files = File::where('folderID', $folderID)->get();
-        $Vals = [];
-        foreach ($files as $file) {
-            $file["type"] = "file";
-            $Vals[] = $file;
-        }
-        foreach ($folders as $folder) {
-            $file["type"] = "folder";
-            $Vals[] = $folder;
-        }
-        $Vals = array_unique($Vals);
-
+        $Vals["folders"] = $folders;
+        $Vals["files"] = $files;
         return $this->success($Vals, 'Successed');
     }
 }
