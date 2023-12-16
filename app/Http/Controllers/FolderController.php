@@ -11,19 +11,15 @@ class FolderController extends Controller
 {
     public function createFolder(Request $request)
     {
-        try {
-            $request->validate([
-                'name' => 'required|string',
-                'folderID' => 'required',
-            ]);
-        } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
-        }
+        $request->validate([
+            'name' => 'required|string',
+            'folderID' => 'required',
+        ]);
         $name = $request->input("name");
         $fID = $request->input("folderID");
         $pID = $request->input("projectID");
         try {
-            Folder::create([
+            $newFolder = Folder::create([
                 'name' => $name,
                 'folderID' => $fID,
                 'projectID' => $pID,
@@ -31,22 +27,15 @@ class FolderController extends Controller
         } catch (Exception $e) {
             return response()->json(['msg' => $e->getMessage()], 400);
         }
-        return $this->success(message: 'Folder added successfully', status: 201);
+        return $this->success(message: 'Folder added successfully', data: $newFolder, status: 201);
     }
 
     public function getSubFolders(int $folderID)
     {
         $folders = Folder::where('folderID', $folderID)->get();
         $files = File::where('folderID', $folderID)->get();
-        $Vals = [];
-        foreach ($files as $file) {
-            $Vals[] = $file;
-        }
-        foreach ($folders as $folder) {
-            $Vals[] = $folder;
-        }
-        $Vals = array_unique($Vals);
-
+        $Vals["folders"] = $folders;
+        $Vals["files"] = $files;
         return $this->success($Vals, 'Successed');
     }
 }

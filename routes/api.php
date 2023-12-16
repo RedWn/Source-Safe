@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::prefix('/files')->group(function () {
+        Route::get('/download/{id}', [\App\Http\Controllers\FilesController::class, 'downloadFile']); //this should be download because there will probably a get file by id
         Route::get('/', [\App\Http\Controllers\FilesController::class, 'getAllFiles']);
         Route::get('/download/{id}', [\App\Http\Controllers\FilesController::class, 'downloadFile']); //this should be download because there will probably a get file by id
         Route::delete('/{id}', [\App\Http\Controllers\FilesController::class, 'deleteFile']);
