@@ -52,8 +52,10 @@ class CheckController extends Controller
         $userId = request()->user()->id;
 
         if ($file->checkedInBy != null) {
-            if ($file->checkedInBy == $userId) return $this->error("File is already checked in by your account.");
-            else return $this->error("File is already checked out! Please try again later.");
+            if ($file->checkedInBy == $userId)
+                return $this->error("File is already checked in by your account.");
+            else
+                return $this->error("File is already checked in by another user! Please try again later.");
         }
 
         $file->update(['checkedInBy' => $userId]);
@@ -64,6 +66,6 @@ class CheckController extends Controller
             'fileID' => $id,
         ]);
 
-        return $this->success(message: "File checked out successfully!");
+        return $this->success(message: "File checked in successfully!");
     }
 }
