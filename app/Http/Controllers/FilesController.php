@@ -18,14 +18,14 @@ class FilesController extends Controller
             'projectID' => 'required|exists:projects,id'
         ]);
 
-        $serverPath = FileManager::storeFile($request->file("file"), $request->input("filename"));
-
-        File::create([
-            'serverPath' => $serverPath,
+        $file = File::create([
             'name' => $request->input("filename"),
             'folderID' => $request->input("folderID"),
             'projectID' => $request->input("projectID"),
         ]);
+
+        $serverPath = FileManager::storeFile($request->file("file"), $file->id);
+        $file['serverPath'] = $serverPath;
 
         return $this->success(message: 'File added successfully', status: 201);
     }

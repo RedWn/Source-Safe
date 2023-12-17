@@ -10,9 +10,9 @@ class FileManager
         this code is local and not http
         */
 {
-    public static function storeFile($file, $name): string
+    public static function storeFile($file, $fileID): string
     {
-        $filePath = storage_path() . "\\" . $name;
+        $filePath = storage_path() . "\\" . $fileID;
         move_uploaded_file($file, $filePath);
         return $filePath;
     }
