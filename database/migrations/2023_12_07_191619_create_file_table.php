@@ -19,11 +19,11 @@ class CreateFileTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('serverPath');
-            $table->unsignedBigInteger('projectID')->index();
-            $table->foreign('projectID')->references('id')->on('projects');
-            $table->unsignedBigInteger('folderID')->index();
-            $table->foreign('folderID')->references('id')->on('folders');
-            $table->boolean('checked');
+            
+            $table->foreignId('projectID')->constrained('projects');
+            $table->foreignId('folderID')->constrained('files');
+            $table->foreignId('checkedInBy')->nullable()->constrained('users');
+
             $table->timestamps();
         });
 

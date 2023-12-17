@@ -17,10 +17,10 @@ class CreateLedgerTable extends Migration
 
         Schema::create('ledgers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('userID')->index();
-            $table->foreign('userID')->references('id')->on('users');
-            $table->unsignedBigInteger('projectID')->index();
-            $table->foreign('projectID')->references('id')->on('projects');
+
+            $table->foreignId('userID')->constrained('users');
+            $table->foreignId('projectID')->constrained('projects');
+
             $table->timestamps();
         });
 

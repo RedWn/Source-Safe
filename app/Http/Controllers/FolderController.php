@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 use App\Models\Folder;
-use Exception;
 use Illuminate\Http\Request;
 
 class FolderController extends Controller
@@ -13,29 +12,29 @@ class FolderController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'folderID' => 'required',
+            'folderID' => 'required|exists:folders,id',
+            'projectID' => 'required|exists:projects,id'
         ]);
-        $name = $request->input("name");
-        $fID = $request->input("folderID");
-        $pID = $request->input("projectID");
-        try {
-            $newFolder = Folder::create([
-                'name' => $name,
-                'folderID' => $fID,
-                'projectID' => $pID,
-            ]);
-        } catch (Exception $e) {
-            return response()->json(['msg' => $e->getMessage()], 400);
-        }
-        return $this->success(message: 'Folder added successfully', data: $newFolder, status: 201);
+
+        $folder = Folder::create([
+            'name' =>  $request->input("name"),
+            'folderID' => $request->input("folderID"),
+            'projectID' => $request->input("projectID"),
+        ]);
+
+        return $this->success($folder, 'Folder added successfully', 201);
     }
 
-    public function getSubFolders(int $folderID)
+    public function getFolderContents(int $folderID)
     {
         $folders = Folder::where('folderID', $folderID)->get();
         $files = File::where('folderID', $folderID)->get();
-        $Vals["folders"] = $folders;
-        $Vals["files"] = $files;
-        return $this->success($Vals, 'Successed');
+
+        $data = [
+            "folders" => $folders,
+            "files" => $files,
+        ];
+
+        return $this->success($data);
     }
 }

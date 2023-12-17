@@ -18,10 +18,10 @@ class CreateFolderTable extends Migration
         Schema::create('folders', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('projectID')->index();
-            $table->foreign('projectID')->references('id')->on('projects');
-            $table->unsignedBigInteger('folderID')->index()->nullable();
-            $table->foreign('folderID')->references('id')->on('folders');
+
+            $table->foreignId('projectID')->constrained('projects');
+            $table->foreignId('folderID')->nullable()->constrained('files');
+
             $table->timestamps();
         });
 

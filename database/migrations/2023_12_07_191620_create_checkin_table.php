@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 class CreateCheckinTable extends Migration
 {
     /**
-     * Run the migrations.
+ * Run the migrations.
      *
      * @return void
      */
@@ -17,14 +17,15 @@ class CreateCheckinTable extends Migration
 
         Schema::create('checkins', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('date');
-            $table->unsignedBigInteger('fileID')->index();
-            $table->foreign('fileID')->references('id')->on('files');
-            $table->unsignedBigInteger('duration');
-            $table->unsignedBigInteger('userID')->index();
-            $table->foreign('userID')->references('id')->on('users');
-            $table->boolean('checkedOut');
+            $table->date('checkout_date');
+            $table->boolean('done')->default(false);
+
+
+            $table->foreignId('fileID')->constrained('files');
+            $table->foreignId('userID')->constrained('users');
+
             $table->timestamps();
+
         });
 
         Schema::enableForeignKeyConstraints();

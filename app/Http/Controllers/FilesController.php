@@ -4,54 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Custom\FileManager;
 use App\Models\File;
-use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\File as FileValidationRule;
 
 class FilesController extends Controller
 {
-    public function uploadFile(Request $request)
+    public function upload(Request $request)
     {
         $request->validate([
-            'file' => 'required|file',
-            'filename' => 'required|string',
-            'folderID' => 'required',
-            'projectID' => 'required'
+            'file' => FileValidationRule::default()->max('5mb'),
+            'filename' => 'required|string|max:200',
+            'folderID' => 'required|exists:folders,id',
+            'projectID' => 'required|exists:projects,id'
         ]);
-        $file = $request->file("file");
-        $fID = $request->input("folderID");
-        $name = $request->input("filename");
-        $pID = $request->input("projectID");
-        $dbfile = File::create([
-            'serverPath' => '/',
-            'name' => $name,
-            'folderID' => $fID,
-            'projectID' => $pID,
-            'checked' => 0,
+
+        $serverPath = FileManager::storeFile($request->file("file"), $request->input("filename"));
+
+        File::create([
+            'serverPath' => $serverPath,
+            'name' => $request->input("filename"),
+            'folderID' => $request->input("folderID"),
+            'projectID' => $request->input("projectID"),
         ]);
-        $serverPath = FileManager::storeFile($file, $dbfile['id']);
-        $dbfile['serverPath'] = $serverPath;
+
         return $this->success(message: 'File added successfully', status: 201);
     }
 
-    public static function downloadFile(int $fileId)
+    public static function download(int $fileId)
     {
-        $file = File::where('id', $fileId)->first();
-        $file_name = $file["name"];
-        $file_path = $file["serverPath"];
-
-        if (!FileManager::exists($fileId)) {
-            return response()->json(['msg' => "$file_name not found"], 400);
-        }
-        return response()->download(FileManager::getFilePath($fileId), name: $file_name);
+        $file = File::findOrFail($fileId);
+        return response()->download(FileManager::getFilePath($fileId), name: $file["name"]);
     }
-    public function deleteFile(int $fileId)
+
+    public function delete(int $fileId)
     {
-        if ($fileId != "" && FileManager::exists($fileId)) {
-            FileManager::deleteFile($fileId);
-            File::destroy($fileId);
-            return $this->success(message: 'successed');
-        } else {
-            return response()->json(['msg' => 'please insert valid id'], 400);
-        }
+        $file = File::findOrFail($fileId);
+
+        $file->delete();
+        FileManager::deleteFileFromStorage($fileId);
+
+        return $this->success(message: 'Deleted file successfully!');
     }
 }

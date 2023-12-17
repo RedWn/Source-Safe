@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\CheckController;
+use App\Http\Controllers\FilesController;
+use App\Http\Controllers\FolderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,17 +25,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::prefix('/files')->group(function () {
-        Route::get('/download/{id}', [\App\Http\Controllers\FilesController::class, 'downloadFile']); //this should be download because there will probably a get file by id
-        Route::get('/', [\App\Http\Controllers\FilesController::class, 'getAllFiles']);
-        Route::get('/download/{id}', [\App\Http\Controllers\FilesController::class, 'downloadFile']); //this should be download because there will probably a get file by id
-        Route::delete('/{id}', [\App\Http\Controllers\FilesController::class, 'deleteFile']);
-        Route::post('/upload', [\App\Http\Controllers\FilesController::class, 'uploadFile']);
-        Route::post('/checkOut', [\App\Http\Controllers\CheckController::class, 'checkoutFile']);
-        Route::post('/autoCheckOut', [\App\Http\Controllers\CheckController::class, 'checkoutFileAuto']);
+        Route::get('/', [FilesController::class, 'getAllFiles']);
 
+        Route::post('/upload', [FilesController::class, 'upload']);
+        Route::post('/checkOut', [CheckController::class, 'checkout']);
+        Route::post('/autoCheckOut', [CheckController::class, 'checkoutAuto']);
+
+        Route::delete('/{id}', [FilesController::class, 'delete'])->whereNumber('id');
+        Route::get('/download/{id}', [FilesController::class, 'download'])->whereNumber('id');
+        Route::post('/checkin/{id}', [CheckController::class, 'checkin'])->whereNumber('id');
     });
+
     Route::prefix('/folders')->group(function () {
-        Route::get('/{id}', [\App\Http\Controllers\FolderController::class, 'getSubFolders']);
-        Route::post('/new', [\App\Http\Controllers\FolderController::class, 'createFolder']);
+        Route::get('/{id}', [FolderController::class, 'getFolderContents']);
+        Route::post('/new', [FolderController::class, 'createFolder']);
     });
 });
