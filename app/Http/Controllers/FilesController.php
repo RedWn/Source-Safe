@@ -19,6 +19,7 @@ class FilesController extends Controller
         ]);
 
         $file = File::create([
+            'serverPath' => '',
             'name' => $request->input("filename"),
             'folderID' => $request->input("folderID"),
             'projectID' => $request->input("projectID"),
