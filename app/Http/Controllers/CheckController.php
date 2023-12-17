@@ -13,34 +13,33 @@ class CheckController extends Controller
     public function checkout(Request $request)
     {
         $request->validate([
-            'file' => 'required|file',
             'fileID' => 'required|exists:files,id',
         ]);
+        if (!$request->has('file')) {
+            $fileID = $request->input("fileID");
+            $file = File::findOrFail($fileID);
 
+            if ($file->checkedInBy == null)
+                return $this->error("File is not checked in.");
+            if ($file->checkedInBy != $request->user()->id)
+                return $this->error("You do not have permissions to check out this file", 403);
+            $file->update(['checkedInBy' => null]);
+            return $this->success(message: "File is checked out and reverted.");
+        }
         $requestFile = $request->file("file");
         $fileID = $request->input("fileID");
 
         $file = File::findOrFail($fileID);
 
-        if ($file->checkedInBy == null) return $this->error("File is not checked in.");
-        if ($file->checkedInBy != $request->user()->id) return $this->error("You do not have permissions to check out this file", 403);
+        if ($file->checkedInBy == null)
+            return $this->error("File is not checked in.");
+        if ($file->checkedInBy != $request->user()->id)
+            return $this->error("You do not have permissions to check out this file", 403);
 
         FileManager::storeFile($requestFile, $fileID);
         $file->update(['checkedInBy' => null]);
 
         return $this->success(message: "File is checked out and updated.");
-    }
-
-    public function checkoutAuto(Request $request)
-    {
-        $fileID = $request->input("fileID");
-        $file = File::findOrFail($fileID);
-
-        if ($file->checkedInBy == null) return $this->error("File is not checked in.");
-        if ($file->checkedInBy != $request->user()->id) return $this->error("You do not have permissions to check out this file", 403);
-        $file->update(['checkedInBy' => null]);
-
-        return $this->success(message: "File is checked out and reverted.");
     }
 
     public function checkin(Request $request, int $id): JsonResponse
