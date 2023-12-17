@@ -30,18 +30,18 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e)
     {
-        if ($exception instanceof ModelNotFoundException) {
+        if ($e instanceof ModelNotFoundException) {
             // Sample message: "No query results for model [App\Models\File] 1, 2, 3, 4"
-            $contentAfterLastBracket = substr($exception->getMessage(), strrpos($exception->getMessage(), "]") + 1);
+            $contentAfterLastBracket = substr($e->getMessage(), strrpos($e->getMessage(), "]") + 1);
 
-            $message = "Entry with id(s) $contentAfterLastBracket not found.";
+            $message = "Entry with id(s)$contentAfterLastBracket not found.";
             return response()->json([
                 'message' => $message
             ], 404);
         }
 
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 }

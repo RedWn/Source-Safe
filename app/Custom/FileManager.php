@@ -5,8 +5,8 @@ namespace App\Custom;
 use App\Models\File;
 
 class FileManager
-    /*
-    this class is for hanlding file io on the server (i.e. the hard drive)
+/*
+    this class is for handling file io on the server (i.e. the hard drive)
     this code is local and not http
     */
 {
@@ -17,7 +17,7 @@ class FileManager
         return $filePath;
     }
 
-    public static function deleteFile($fileID): bool
+    public static function deleteFileFromStorage($fileID): bool
     {
         $file = File::where("id", $fileID)->first();
         return unlink(storage_path() . $file["serverPath"] . $fileID);
