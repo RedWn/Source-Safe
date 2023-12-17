@@ -5,10 +5,10 @@ namespace App\Custom;
 use App\Models\File;
 
 class FileManager
-/*
-    this class is for handling file io on the server (i.e. the hard drive)
-    this code is local and not http
-    */
+    /*
+        this class is for handling file io on the server (i.e. the hard drive)
+        this code is local and not http
+        */
 {
     public static function storeFile($file, $name): string
     {
@@ -30,6 +30,7 @@ class FileManager
 
     public static function exists($fileID): bool
     {
-        return (File::where("id", $fileID)->first() != null);
+        $file = File::where("id", $fileID)->first();
+        return file_exists(storage_path() . $file["serverPath"] . $fileID);
     }
 }
