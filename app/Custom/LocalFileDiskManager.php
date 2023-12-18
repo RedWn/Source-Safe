@@ -16,7 +16,7 @@ class LocalFileDiskManager
     public static function deleteFile($fileID): bool
     {
         $file = File::findOrFail($fileID);
-        return unlink(storage_path() . $file["serverPath"]);
+        return unlink($file["serverPath"]);
     }
 
     public static function getFilePath($fileID): string
@@ -27,6 +27,6 @@ class LocalFileDiskManager
     public static function fileExists($fileID): bool
     {
         $file = File::findOrFail($fileID);
-        return file_exists(storage_path() . $file["serverPath"]);
+        return file_exists($file["serverPath"]);
     }
 }
