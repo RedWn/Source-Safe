@@ -12,7 +12,7 @@ class File extends Model
         'serverPath',
         'name',
         'checkedInBy',
-        'projectID',
-        'folderID',
+        'project_id',
+        'folder_id',
     ];
 }

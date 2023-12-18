@@ -18,8 +18,8 @@ class CreateLedgerTable extends Migration
         Schema::create('ledgers', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('userID')->constrained('users');
-            $table->foreignId('projectID')->constrained('projects');
+            $table->foreignId('user_id');
+            $table->foreignId('project_id');
 
             $table->timestamps();
         });

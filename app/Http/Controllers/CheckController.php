@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Custom\FileManager;
+use App\Custom\LocalFileDiskManager;
 use App\Models\Checkin;
 use App\Models\File;
 use Illuminate\Http\Request;
@@ -28,7 +28,7 @@ class CheckController extends Controller
         }
 
         $requestFile = $request->file("file");
-        FileManager::storeFile($requestFile, $fileID);
+        LocalFileDiskManager::storeFile($requestFile, $fileID);
 
         return $this->success(message: "File is checked out and updated.");
     }
@@ -53,8 +53,8 @@ class CheckController extends Controller
 
         Checkin::insert([
             'checkout_date' => now()->addDays($request->input('durationInDays')),
-            'userID' => $userId,
-            'fileID' => $id,
+            'user_id' => $userId,
+            'file_id' => $id,
         ]);
 
         return $this->success(message: "File checked in successfully!");

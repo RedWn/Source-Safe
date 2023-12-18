@@ -9,9 +9,9 @@ class Checkin extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'fileID',
+        'file_id',
+        'user_id',
         'checkout_date',
-        'userID',
         'done'
     ];
 }

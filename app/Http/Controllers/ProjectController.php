@@ -25,13 +25,12 @@ class ProjectController extends Controller
         return $this->success($project, 'project created successfully', 201);
     }
 
-    public function edit(Request $request)
+    public function edit(Request $request, int $projectId)
     {
         $request->validate([
-            'id' => 'required',
-            'name' => 'required|string',
+            'name' => 'required|string|max:200',
         ]);
-        $project = Project::findOrFail($request->input('id'));
+        $project = Project::findOrFail($projectId);
         $project->update(['name' => $request->input('name')]);
 
         return $this->success(message: 'project edited successfully!');
@@ -39,30 +38,33 @@ class ProjectController extends Controller
 
     public function delete(int $projectID)
     {
-        Ledger::where('projectID', $projectID)->delete();
-        Folder::where('projectID', $projectID)->delete();
-        File::where('projectID', $projectID)->delete();
+        Ledger::where('project_id', $projectID)->delete();
+        Folder::where('project_id', $projectID)->delete();
+        File::where('project_id', $projectID)->delete();
         $project = Project::findOrFail($projectID);
         $project->delete();
 
         return $this->success(message: 'Deleted project successfully!');
     }
 
-    public function addUser(Request $request)
+    public function addUser(Request $request, int $projectID)
     {
         $request->validate([
-            'projectID' => 'required|exists:projects,id',
             'userID' => 'required|exists:users,id',
         ]);
-        $projectID = $request->input("projectID");
+
+        // TODO: Replace this query with proper error handling
+        $project = Project::findOrFail($projectID);
+
         $userID = $request->input("userID");
-        $entry = Ledger::where('projectID', $projectID)->where('userID', $userID)->first();
+
+        $entry = Ledger::where('project_id', $projectID)->where('user_id', $userID)->first();
         if ($entry) {
             return $this->error("user already added", 400);
         }
         Ledger::create([
-            'projectID' => $projectID,
-            'userID' => $userID,
+            'project_id' => $projectID,
+            'user_id' => $userID,
         ]);
         return $this->success(message: 'User added successfully!', status: 201);
     }
@@ -75,16 +77,17 @@ class ProjectController extends Controller
         ]);
         $projectID = $request->input("projectID");
         $userID = $request->input("userID");
-        Ledger::where('projectID', $projectID)->where('userID', $userID)->delete();
+        Ledger::where('project_id', $projectID)->where('user_id', $userID)->delete();
         return $this->success(message: 'User removed successfully!');
     }
 
-    public function getUserProjects(Request $request)
+    public function getMyProjects(Request $request)
     {
-        $ledger = Ledger::where('userID', $request->user()->id)->get();
+        $ledger = Ledger::where('user_id', $request->user()->id)->get();
+
         $projects = [];
         foreach ($ledger as $entry) {
-            $project = Project::findOrFail($entry->projectID);
+            $project = Project::findOrFail($entry->project_id);
             $projects[] = $project;
         }
         return $this->success($projects, 'success', 200);
@@ -92,28 +95,28 @@ class ProjectController extends Controller
 
     public function getProjectUsers(int $projectID)
     {
-        $ledger = Ledger::where('projectID', $projectID)->get();
+        $ledger = Ledger::where('project_id', $projectID)->get();
         $users = [];
         foreach ($ledger as $entry) {
-            $user = User::findOrFail($entry->userID);
+            $user = User::findOrFail($entry->user_id);
             $users[] = $user;
         }
         return $this->success($users, 'success', 200);
     }
 
-    public function addFirstUser(int $projectID, int $userID)
+    private function addFirstUser(int $projectID, int $userID)
     {
         Ledger::create([
-            'projectID' => $projectID,
-            'userID' => $userID,
+            'project_id' => $projectID,
+            'user_id' => $userID,
         ]);
     }
 
-    public function createRootFolder(int $projectID)
+    private function createRootFolder(int $projectID)
     {
         Folder::create([
             'name' => '/',
-            'projectID' => $projectID,
+            'project_id' => $projectID,
         ]);
     }
 }

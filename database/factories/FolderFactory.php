@@ -18,7 +18,7 @@ class FolderFactory extends Factory
     {
         return [
             'name' => '/',
-            'projectID' => 1,
+            'project_id' => 1,
         ];
     }
 }

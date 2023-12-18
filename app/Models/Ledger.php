@@ -10,7 +10,7 @@ class Ledger extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'userID',
-        'projectID',
+        'user_id',
+        'project_id',
     ];
 }

@@ -18,8 +18,8 @@ class FolderController extends Controller
 
         $folder = Folder::create([
             'name' =>  $request->input("name"),
-            'folderID' => $request->input("folderID"),
-            'projectID' => $request->input("projectID"),
+            'folder_id' => $request->input("folderID"),
+            'project_id' => $request->input("projectID"),
         ]);
 
         return $this->success($folder, 'Folder added successfully', 201);
@@ -27,8 +27,8 @@ class FolderController extends Controller
 
     public function getFolderContents(int $folderID)
     {
-        $folders = Folder::where('folderID', $folderID)->get();
-        $files = File::where('folderID', $folderID)->get();
+        $folders = Folder::findOrFail($folderID);
+        $files = File::where('folder_id', $folderID)->get();
 
         $data = [
             "folders" => $folders,

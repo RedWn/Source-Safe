@@ -40,14 +40,16 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('/projects')->group(function () {
-        Route::get('/', [ProjectController::class, 'getUserProjects']);
-        Route::get('/users/{id}', [ProjectController::class, 'getProjectUsers'])->whereNumber('id');
+        Route::get('/{id}/users', [ProjectController::class, 'getProjectUsers'])->whereNumber('id');
+        Route::post('/{id}/adduser', [ProjectController::class, 'addUser'])->whereNumber('id');
+        Route::post('/{id}/removeuser', [ProjectController::class, 'removeUser'])->whereNumber('id');
 
-        Route::post('/adduser', [ProjectController::class, 'addUser']);
-        Route::post('/removeuser', [ProjectController::class, 'removeUser']);
-
-        Route::post('/new', [ProjectController::class, 'create']);
-        Route::post('/edit', [ProjectController::class, 'edit'])->whereNumber('id');
+        Route::post('/', [ProjectController::class, 'create']);
+        Route::put('/{id}', [ProjectController::class, 'edit'])->whereNumber('id');
         Route::delete('/{id}', [ProjectController::class, 'delete'])->whereNumber('id');
+    });
+
+    Route::prefix('/my')->group(function () {
+       Route::get('/projects', [ProjectController::class, 'getMyProjects']);
     });
 });

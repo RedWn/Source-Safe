@@ -20,9 +20,8 @@ class CreateCheckinTable extends Migration
             $table->date('checkout_date');
             $table->boolean('done')->default(false);
 
-
-            $table->foreignId('fileID')->constrained('files');
-            $table->foreignId('userID')->constrained('users');
+            $table->foreignId('file_id');
+            $table->foreignId('user_id');
 
             $table->timestamps();
 
