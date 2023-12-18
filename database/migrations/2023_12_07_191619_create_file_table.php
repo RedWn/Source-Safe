@@ -22,7 +22,6 @@ class CreateFileTable extends Migration
 
             $table->foreignId('project_id');
             $table->foreignId('folder_id');
-            $table->foreignId('checkedInBy')->nullable()->constrained('users');
 
             $table->timestamps();
         });
