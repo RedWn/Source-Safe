@@ -27,16 +27,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('/files')->group(function () {
         Route::post('/upload', [FilesController::class, 'upload']);
-        Route::post('/checkout', [CheckController::class, 'checkout']);
 
         Route::delete('/{id}', [FilesController::class, 'delete'])->whereNumber('id');
-        Route::get('/download/{id}', [FilesController::class, 'download'])->whereNumber('id');
-        Route::post('/checkin/{id}', [CheckController::class, 'checkin'])->whereNumber('id');
+        Route::get('/{id}/download', [FilesController::class, 'download'])->whereNumber('id');
+        Route::post('/{id}/checkin', [CheckController::class, 'checkin'])->whereNumber('id');
+        Route::post('/{id}/checkout', [CheckController::class, 'checkout']);
     });
 
     Route::prefix('/folders')->group(function () {
         Route::get('/{id}', [FolderController::class, 'getFolderContents'])->whereNumber('id');
-        Route::post('/new', [FolderController::class, 'createFolder']);
+        Route::post('/', [FolderController::class, 'createFolder']);
     });
 
     Route::prefix('/projects')->group(function () {
