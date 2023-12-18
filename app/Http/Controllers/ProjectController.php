@@ -69,10 +69,9 @@ class ProjectController extends Controller
         return $this->success(message: 'User added successfully!', status: 201);
     }
 
-    public function removeUser(Request $request)
+    public function removeUser(Request $request, int $projectID)
     {
         $request->validate([
-            'projectID' => 'required|exists:projects,id',
             'userID' => 'required|exists:users,id',
         ]);
         $projectID = $request->input("projectID");
