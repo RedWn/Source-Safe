@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Checkin;
 use App\Models\File;
 use App\Models\Folder;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class FolderController extends Controller
@@ -29,6 +31,15 @@ class FolderController extends Controller
     {
         $folders = Folder::where('folder_id', $folderID)->get();
         $files = File::where('folder_id', $folderID)->get();
+
+        foreach ($files as $file) {
+            $check = Checkin::where('file_id', $file->id)->where('done', 0)->first();
+            if ($check) {
+                $file["checkedBy"] = User::find($check->user_id)->username;
+            } else {
+                $file["checkedBy"] = null;
+            }
+        }
 
         $data = [
             "folders" => $folders,
