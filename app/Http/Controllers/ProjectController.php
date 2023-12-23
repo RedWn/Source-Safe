@@ -19,6 +19,7 @@ class ProjectController extends Controller
 
         $project = Project::create([
             'name' => $request->input("name"),
+            'admin_id' => $request->user()->id,
         ]);
         $this->addFirstUser($project->id, $request->user()->id);
         $this->createRootFolder($project->id);
