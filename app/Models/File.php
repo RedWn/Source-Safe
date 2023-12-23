@@ -11,7 +11,6 @@ class File extends Model
     protected $fillable = [
         'serverPath',
         'name',
-        'checkedInBy',
         'project_id',
         'folder_id',
     ];

@@ -27,9 +27,10 @@ class HandleOverdueCheckinsCommand extends Command
         }
 
         Checkin::whereIn('id', $checkinIdsToUpdate)->update(['done' => true]);
-        File::whereIn('id', $fileIdsToUpdate)->update(['checkedInBy' => null]);
 
-        if (count($fileIdsToUpdate) == 0) echo "No overdue checkins were found.\n";
-        else echo count($fileIdsToUpdate) . " overdue checkins were updated.\n";
+        if (count($fileIdsToUpdate) == 0)
+            echo "No overdue checkins were found.\n";
+        else
+            echo count($fileIdsToUpdate) . " overdue checkins were updated.\n";
     }
 }
