@@ -10,6 +10,7 @@ class Project extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'ledgerID'
+        'ledger_id',
+        'admin_id',
     ];
 }
