@@ -50,6 +50,6 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('/my')->group(function () {
-       Route::get('/projects', [ProjectController::class, 'getMyProjects']);
+        Route::get('/projects', [ProjectController::class, 'getMyProjects']);
     });
 });

@@ -15,6 +15,7 @@ class ProjectController extends Controller
 
         $project = Project::create([
             'name' => $request->input("name"),
+            'admin_id' => $request->user()->id,
         ]);
 
         $project->users()->attach($request->user()->id);

@@ -12,6 +12,7 @@ class Project extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'admin_id'
     ];
 
     public function users(): BelongsToMany

@@ -43,7 +43,7 @@ class CheckController extends Controller
         ]);
 
         $userId = request()->user()->id;
-        $checkin = Checkin::where('file_id', $id)->where('done', 0)->first();
+        $checkin = Checkin::where('file_id', $id)->where('done', 0)->lockForUpdate()->first();
 
         if ($checkin) {
             if ($checkin->user_id == $userId) {
