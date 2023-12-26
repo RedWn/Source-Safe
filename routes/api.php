@@ -36,7 +36,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('/folders')->group(function () {
         Route::get('/{id}', [FolderController::class, 'getFolderContents'])->whereNumber('id');
-        Route::post('/', [FolderController::class, 'createFolder']);
+        Route::delete('/{id}', [FolderController::class, 'delete'])->whereNumber('id');
+        Route::post('/', [FolderController::class, 'create']);
     });
 
     Route::prefix('/projects')->group(function () {

@@ -7,10 +7,11 @@ use App\Models\File;
 use App\Models\Folder;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FolderController extends Controller
 {
-    public function createFolder(Request $request)
+    public function create(Request $request)
     {
         $request->validate([
             'name' => 'required|string|min:1|max:255',
@@ -47,5 +48,17 @@ class FolderController extends Controller
         ];
 
         return $this->success($data);
+    }
+
+    public function delete(int $folderID)
+    {
+        DB::transaction(function () use($folderID) {
+            $folder = Folder::lockForUpdate()->findOrFail($folderID);
+
+            $folder->files()->delete();
+            $folder->delete();
+
+            return $this->success(message: "Folder deleted successfully.");
+        });
     }
 }
