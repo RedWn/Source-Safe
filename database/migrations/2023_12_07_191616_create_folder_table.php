@@ -19,8 +19,8 @@ class CreateFolderTable extends Migration
             $table->id();
             $table->string('name');
 
-            $table->foreignId('project_id');
-            $table->foreignId('folder_id')->nullable();
+            $table->foreignId('project_id')->constrained();
+            $table->foreignId('folder_id')->nullable()->constrained();
 
             $table->timestamps();
         });
