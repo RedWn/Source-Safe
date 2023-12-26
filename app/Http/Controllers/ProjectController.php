@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProjectResource;
+use App\Http\Resources\UserResource;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
@@ -87,14 +89,14 @@ class ProjectController extends Controller
 
     public function getMyProjects(Request $request)
     {
-        $projects = $request->user()->projects()->get();
+        $projects = ProjectResource::collection($request->user()->projects()->get());
         return $this->success($projects, 'success', 200);
     }
 
     public function getProjectUsers(int $projectID)
     {
         $project = Project::findOrFail($projectID);
-        $users = $project->users()->get();
+        $users = UserResource::collection($project->users()->get());
 
         return $this->success($users, 'success', 200);
     }

@@ -13,7 +13,7 @@ class FolderController extends Controller
     public function createFolder(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|min:1|max:255',
             'folderID' => 'required|exists:folders,id',
             'projectID' => 'required|exists:projects,id'
         ]);
