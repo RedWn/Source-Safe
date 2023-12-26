@@ -20,8 +20,9 @@ class CreateFileTable extends Migration
             $table->string('name');
             $table->string('serverPath');
 
-            $table->foreignId('project_id');
-            $table->foreignId('folder_id');
+            $table->foreignId('project_id')->constrained();
+            $table->foreignId('folder_id')->constrained();
+            $table->foreignId('checked_in_by')->nullable()->constrained('users', 'id');
 
             $table->timestamps();
         });
