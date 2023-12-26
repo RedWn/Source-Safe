@@ -8,6 +8,8 @@ use App\Models\Folder;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use function Laravel\Prompts\password;
 
 class DatabaseSeeder extends Seeder
@@ -17,14 +19,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        Schema::disableForeignKeyConstraints();
+
         Project::factory()
             ->count(10)
             ->hasFolders(3)
             ->hasUsers(3)
             ->create();
 
-
-
         User::create(['username' => 'hasan', 'password' => '1234']);
+
+        Schema::enableForeignKeyConstraints();
     }
 }

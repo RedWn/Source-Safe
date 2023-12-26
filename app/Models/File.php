@@ -13,5 +13,13 @@ class File extends Model
         'name',
         'project_id',
         'folder_id',
+        'checked_in_by'
     ];
+
+    public function markPendingCheckinsAsDone(): void
+    {
+        Checkin::where('file_id', $this->id)
+            ->where('done', 0)
+            ->update(['done' => 1]);
+    }
 }

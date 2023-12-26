@@ -57,8 +57,8 @@ class FolderController extends Controller
 
             $folder->files()->delete();
             $folder->delete();
-
-            return $this->success(message: "Folder deleted successfully.");
         });
+
+        return $this->success(message: "Folder deleted successfully.");
     }
 }

@@ -5,26 +5,36 @@ namespace App\Http\Controllers;
 use App\Custom\LocalFileDiskManager;
 use App\Models\Checkin;
 use App\Models\File;
-use App\Models\Ledger;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class CheckController extends Controller
 {
     public function checkout(Request $request, int $fileID)
     {
+        DB::beginTransaction();
+
         $request->validate([
             'file' => 'nullable|file'
         ]);
 
-        $checkin = Checkin::where('file_id', $fileID)->where('done', 0)->first();
+        $file = File::findOrFail($fileID);
 
-        if (!$checkin)
+        if ($file->checked_in_by == null) {
+            DB::rollBack();
             return $this->error("File is not checked in.");
-        if ($checkin->user_id != $request->user()->id)
+        }
+        if ($file->checked_in_by != $request->user()->id) {
+            DB::rollBack();
             return $this->error("You do not have permissions to check out this file", 403);
+        }
 
-        $checkin->update(['done' => 1]);
+        $file->checked_in_by = null;
+        $file->markPendingCheckinsAsDone();
+        $file->save();
+
+        DB::commit();
 
         if (!$request->has('file')) {
             return $this->success(message: "File is checked out and reverted.");
@@ -36,28 +46,39 @@ class CheckController extends Controller
         return $this->success(message: "File is checked out and updated.");
     }
 
-    public function checkin(Request $request, int $id): JsonResponse
+    public function checkin(Request $request): JsonResponse
     {
         $request->validate([
-            'durationInDays' => 'required|int|min:1|max:3'
+            'durationInDays' => 'required|int|min:1|max:3',
+            'fileIDs' => 'required|array'
         ]);
+
+        DB::beginTransaction();
 
         $userId = request()->user()->id;
-        $checkin = Checkin::where('file_id', $id)->where('done', 0)->lockForUpdate()->first();
+        $files = File::lockForUpdate()->find($request->input('fileIDs'));
 
-        if ($checkin) {
-            if ($checkin->user_id == $userId) {
-                return $this->error("File is already checked in by your account.");
+        foreach ($files as $file) {
+            if ($file->checked_in_by != null) {
+                DB::rollBack();
+                return $this->error("Some files are already checked in.");
             }
-            return $this->error("File is already checked in by another user! Please try again later.");
         }
 
-        Checkin::insert([
-            'checkout_date' => now()->addDays($request->input('durationInDays')),
-            'user_id' => $userId,
-            'file_id' => $id,
-        ]);
+        foreach ($files as $file) {
+            Checkin::insert([
+                'file_id' => $file->id,
+                'user_id' => $userId,
+                'done' => false,
+                'checkout_date' => now()->addDays($request->input('durationInDays')),
+            ]);
+        }
 
-        return $this->success(message: "File checked in successfully!");
+        // Why toQuery()? https://github.com/livewire/livewire/discussions/4193
+        $files->toQuery()->update(['checked_in_by' => $userId]);
+
+        DB::commit();
+
+        return $this->success(message: "File(s) checked in successfully!");
     }
 }
