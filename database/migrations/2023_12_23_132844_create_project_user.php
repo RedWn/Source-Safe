@@ -4,20 +4,17 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLedgerTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('ledgers', function (Blueprint $table) {
-            $table->id();
-
+        Schema::create('project_user', function (Blueprint $table) {
+            $table->primary(['user_id', 'project_id']);
             $table->foreignId('user_id');
             $table->foreignId('project_id');
 
@@ -29,11 +26,9 @@ class CreateLedgerTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('ledgers');
+        //
     }
-}
+};
