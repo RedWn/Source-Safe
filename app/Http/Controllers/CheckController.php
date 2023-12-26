@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Custom\LocalFileDiskManager;
 use App\Models\Checkin;
 use App\Models\File;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -48,15 +49,17 @@ class CheckController extends Controller
 
     public function checkin(Request $request): JsonResponse
     {
+        $dateAfterThreeDays = Carbon::now()->addDays(3)->toString();
+
         $request->validate([
-            'durationInDays' => 'required|int|min:1|max:3',
+            'checkoutDate' => "required|date_format:Y-m-d|before:$dateAfterThreeDays|after:today",
             'fileIDs' => 'required|array'
         ]);
 
         DB::beginTransaction();
 
         $userId = request()->user()->id;
-        $files = File::lockForUpdate()->find($request->input('fileIDs'));
+        $files = File::lockForUpdate()->findOrFail($request->input('fileIDs'));
 
         foreach ($files as $file) {
             if ($file->checked_in_by != null) {
@@ -70,7 +73,7 @@ class CheckController extends Controller
                 'file_id' => $file->id,
                 'user_id' => $userId,
                 'done' => false,
-                'checkout_date' => now()->addDays($request->input('durationInDays')),
+                'checkout_date' => $request->input('checkoutDate'),
             ]);
         }
 
