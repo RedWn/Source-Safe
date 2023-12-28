@@ -5,6 +5,7 @@ use App\Http\Controllers\CheckController;
 use App\Http\Controllers\FilesController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 // Public Routes
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+Route::get('/searchUsers/{name}', [UserController::class, 'search'])->whereAlpha('name');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
