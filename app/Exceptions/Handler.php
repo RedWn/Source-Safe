@@ -6,7 +6,6 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-
 class Handler extends ExceptionHandler
 {
     /**
@@ -36,7 +35,7 @@ class Handler extends ExceptionHandler
             // Sample message: "No query results for model [App\Models\File] 1, 2, 3, 4"
             $contentAfterLastBracket = substr($e->getMessage(), strrpos($e->getMessage(), "]") + 1);
 
-            $message = "Entry with id(s)$contentAfterLastBracket not found.";
+            $message = "Resource(s) $contentAfterLastBracket not found.";
             return response()->json([
                 'message' => $message
             ], 404);
