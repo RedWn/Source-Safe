@@ -19,6 +19,18 @@ class FolderController extends Controller
             'projectID' => 'required|exists:projects,id'
         ]);
 
+        /**
+         * TODO: REDWN + HASAN
+         * 
+         * Should we validate here that the specified folder really lives in the specified project?
+         * 
+         * ```
+         * $folder = Folder::findOrFail($request->input('folderID));
+         * if ($folder->project_id == $request->input('projectID')) // Good.
+         * else // User is trying to assign one folder to a folder in another project!!
+         * ```
+         */
+
         $folder = Folder::create([
             'name' => $request->input("name"),
             'folder_id' => $request->input("folderID"),
@@ -30,8 +42,10 @@ class FolderController extends Controller
 
     public function getFolderContents(int $folderID)
     {
-        $folders = Folder::where('folder_id', $folderID)->get();
-        $files = File::where('folder_id', $folderID)->get();
+        $rootFolder = Folder::findOrFail($folderID);
+
+        $folders = Folder::where('folder_id', $folderID)->where('project_id', $rootFolder->project_id)->get();
+        $files = File::where('folder_id', $folderID)->where('project_id', $rootFolder->project_id)->get();
 
         return $this->success([
             "folders" => FolderResource::collection($folders),

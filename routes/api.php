@@ -32,7 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::delete('/{id}', [FilesController::class, 'delete'])->whereNumber('id');
         Route::get('/{id}/download', [FilesController::class, 'download'])->whereNumber('id');
-        
+
         Route::post('/checkout', [CheckController::class, 'checkout']);
         Route::post('/checkin', [CheckController::class, 'checkin']);
     });
@@ -44,13 +44,13 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('/projects')->group(function () {
-        Route::get('/{id}/users', [ProjectController::class, 'getProjectUsers'])->whereNumber('id');
-        Route::post('/{id}/adduser', [ProjectController::class, 'addUser'])->whereNumber('id');
-        Route::post('/{id}/removeuser', [ProjectController::class, 'removeUser'])->whereNumber('id');
-
         Route::post('/', [ProjectController::class, 'create']);
         Route::put('/{id}', [ProjectController::class, 'edit'])->whereNumber('id');
         Route::delete('/{id}', [ProjectController::class, 'delete'])->whereNumber('id');
+
+        Route::get('/{id}/users', [ProjectController::class, 'getProjectUsers'])->whereNumber('id');
+        Route::post('/{id}/adduser', [ProjectController::class, 'addUser'])->whereNumber('id');
+        Route::post('/{id}/removeuser', [ProjectController::class, 'removeUser'])->whereNumber('id');
     });
 
     Route::prefix('/my')->group(function () {

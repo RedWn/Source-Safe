@@ -18,6 +18,10 @@ class FilesController extends Controller
             'projectID' => 'required|exists:projects,id'
         ]);
 
+        /**
+         * Search for REDWN + Hasan in codebase to learn more.
+         */
+
         $file = File::create([
             'serverPath' => '',
             'name' => $request->input("filename"),
