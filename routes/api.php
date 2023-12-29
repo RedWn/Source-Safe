@@ -32,8 +32,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::delete('/{id}', [FilesController::class, 'delete'])->whereNumber('id');
         Route::get('/{id}/download', [FilesController::class, 'download'])->whereNumber('id');
-        Route::post('/{id}/checkout', [CheckController::class, 'checkout']);
-
+        
+        Route::post('/checkout', [CheckController::class, 'checkout']);
         Route::post('/checkin', [CheckController::class, 'checkin']);
     });
 

@@ -12,37 +12,48 @@ use Illuminate\Support\Facades\DB;
 
 class CheckController extends Controller
 {
-    public function checkout(Request $request, int $fileID)
+    public function checkout(Request $request)
     {
         DB::beginTransaction();
 
         $request->validate([
-            'file' => 'nullable|file'
+            'file' => 'nullable|file',
+            'file_ids' => 'required|array',
+            'file_ids.*' => 'integer'
         ]);
 
-        $file = File::findOrFail($fileID);
+        $files = File::findOrFail($request->input('file_ids'));
 
-        if ($file->checked_in_by == null) {
-            DB::rollBack();
-            return $this->error("File is not checked in.");
-        }
-        if ($file->checked_in_by != $request->user()->id) {
-            DB::rollBack();
-            return $this->error("You do not have permissions to check out this file", 403);
+        foreach ($files as $file) {
+            if ($file->checked_in_by == null) {
+                DB::rollBack();
+                return $this->error("File ($file->id) is not checked in.");
+            }
+            if ($file->checked_in_by != $request->user()->id) {
+                DB::rollBack();
+                return $this->error("You do not have permissions to check out file ($file->id)", 403);
+            }
         }
 
-        $file->checked_in_by = null;
-        $file->markPendingCheckinsAsDone();
-        $file->save();
+        foreach ($files as $file) {
+            $file->checked_in_by = null;
+
+            $file->markPendingCheckinsAsDone();
+            $file->save();
+        }
 
         DB::commit();
+
+        if (count($files) > 1) {
+            return $this->success(message: "Files are checked out and reverted.");
+        }
 
         if (!$request->has('file')) {
             return $this->success(message: "File is checked out and reverted.");
         }
 
         $requestFile = $request->file("file");
-        LocalFileDiskManager::storeFile($requestFile, $fileID);
+        LocalFileDiskManager::storeFile($requestFile, $request->input('file_ids')[0]);
 
         return $this->success(message: "File is checked out and updated.");
     }
