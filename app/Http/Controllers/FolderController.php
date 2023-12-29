@@ -19,17 +19,10 @@ class FolderController extends Controller
             'projectID' => 'required|exists:projects,id'
         ]);
 
-        /**
-         * TODO: REDWN + HASAN
-         * 
-         * Should we validate here that the specified folder really lives in the specified project?
-         * 
-         * ```
-         * $folder = Folder::findOrFail($request->input('folderID));
-         * if ($folder->project_id == $request->input('projectID')) // Good.
-         * else // User is trying to assign one folder to a folder in another project!!
-         * ```
-         */
+        $rootFolder = Folder::findOrFail($request->input("folderID"));
+        if ($rootFolder->project_id != $request->input('projectID')) {
+            return $this->error("Selected folder doesn't belong to the project you're trying to add it in.");
+        }
 
         $folder = Folder::create([
             'name' => $request->input("name"),

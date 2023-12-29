@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Custom\LocalFileDiskManager;
 use App\Models\File;
+use App\Models\Folder;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\File as FileValidationRule;
 
@@ -18,9 +19,11 @@ class FilesController extends Controller
             'projectID' => 'required|exists:projects,id'
         ]);
 
-        /**
-         * Search for REDWN + Hasan in codebase to learn more.
-         */
+
+        $rootFolder = Folder::findOrFail($request->input("folderID"));
+        if ($rootFolder->project_id != $request->input('projectID')) {
+            return $this->error("Selected folder doesn't belong to the project you're trying to add it in.");
+        }
 
         $file = File::create([
             'serverPath' => '',
