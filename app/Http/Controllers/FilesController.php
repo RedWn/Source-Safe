@@ -33,10 +33,15 @@ class FilesController extends Controller
         return $this->success(message: 'File added successfully', status: 201);
     }
 
-    public static function download(int $fileId)
+    public function download(int $fileId)
     {
-        $file = File::findOrFail($fileId);
-        return response()->download(LocalFileDiskManager::getFilePath($fileId), name: $file["name"]);
+        self::sendFile($fileId);
+        LocalFileDiskManager::deleteDownloadFile($fileId);
+    }
+
+    public function sendFile(int $fileId)
+    {
+        return response()->download(LocalFileDiskManager::getFileToDownload($fileId));
     }
 
     public function delete(int $fileId)
