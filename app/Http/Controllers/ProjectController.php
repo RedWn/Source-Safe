@@ -25,7 +25,7 @@ class ProjectController extends Controller
             'name' => '/',
         ]);
 
-        return $this->success($project, 'Project created successfully.', 201);
+        return $this->success(new ProjectResource($project), 'Project created successfully.', 201);
     }
 
     public function edit(Request $request, int $projectId)

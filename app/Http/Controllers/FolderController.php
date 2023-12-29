@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Checkin;
+use App\Http\Resources\FileResource;
+use App\Http\Resources\FolderResource;
 use App\Models\File;
 use App\Models\Folder;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -25,7 +25,7 @@ class FolderController extends Controller
             'project_id' => $request->input("projectID"),
         ]);
 
-        return $this->success($folder, 'Folder added successfully', 201);
+        return $this->success(new FolderResource($folder), 'Folder added successfully', 201);
     }
 
     public function getFolderContents(int $folderID)
@@ -33,26 +33,15 @@ class FolderController extends Controller
         $folders = Folder::where('folder_id', $folderID)->get();
         $files = File::where('folder_id', $folderID)->get();
 
-        foreach ($files as $file) {
-            $check = Checkin::where('file_id', $file->id)->where('done', 0)->first();
-            if ($check) {
-                $file["checkedBy"] = User::find($check->user_id)->username;
-            } else {
-                $file["checkedBy"] = null;
-            }
-        }
-
-        $data = [
-            "folders" => $folders,
-            "files" => $files,
-        ];
-
-        return $this->success($data);
+        return $this->success([
+            "folders" => FolderResource::collection($folders),
+            "files" => FileResource::collection($files),
+        ]);
     }
 
     public function delete(int $folderID)
     {
-        DB::transaction(function () use($folderID) {
+        DB::transaction(function () use ($folderID) {
             $folder = Folder::lockForUpdate()->findOrFail($folderID);
 
             $folder->files()->delete();
