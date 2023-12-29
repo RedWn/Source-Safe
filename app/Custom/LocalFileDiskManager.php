@@ -29,4 +29,17 @@ class LocalFileDiskManager
         $file = File::findOrFail($fileID);
         return file_exists($file["serverPath"]);
     }
+
+    public static function getFileToDownload($fileID): string
+    {
+        $file = File::findOrFail($fileID);
+        copy(self::getFilePath($fileID), storage_path() . "\\" . $file["name"]);
+        return storage_path() . "\\" . $file["name"];
+    }
+
+    public static function deleteDownloadFile($fileID): bool
+    {
+        $file = File::findOrFail($fileID);
+        return unlink(storage_path() . "\\" . $file["name"]);
+    }
 }
