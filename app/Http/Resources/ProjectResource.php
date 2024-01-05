@@ -20,7 +20,9 @@ class ProjectResource extends JsonResource
 
         return [
             'id' => $project->id,
-            'name' => $project->name
+            'name' => $project->name,
+            'admin_id' => $project->admin_id,
+            'root_id' => $project->root_id,
         ];
     }
 }

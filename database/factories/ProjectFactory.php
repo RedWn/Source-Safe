@@ -18,7 +18,8 @@ class ProjectFactory extends Factory
     {
         return [
             'name' => fake()->name,
-            'admin_id' => 1
+            'admin_id' => 1,
+            'root_id' => 1,
         ];
     }
 }

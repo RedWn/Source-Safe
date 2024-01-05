@@ -18,12 +18,15 @@ class ProjectController extends Controller
         $project = Project::create([
             'name' => $request->input("name"),
             'admin_id' => $request->user()->id,
+            'root_id' => 1
         ]);
 
         $project->users()->attach($request->user()->id);
-        $project->folders()->create([
+        $root = $project->folders()->create([
             'name' => '/',
         ]);
+
+        $project["root_id"] = $root->id;
 
         return $this->success(new ProjectResource($project), 'Project created successfully.', 201);
     }
@@ -80,7 +83,8 @@ class ProjectController extends Controller
         $userID = $request->input("userID");
 
         $user = $project->users()->find($userID);
-        if (!$user) return $this->error("User does not belong to project.");
+        if (!$user)
+            return $this->error("User does not belong to project.");
 
         $project->users()->detach($userID);
 
