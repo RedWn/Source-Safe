@@ -23,6 +23,8 @@ class FolderResource extends JsonResource
             'name' => $resource->name,
             'project_id' => $resource->project_id,
             'folder_id' => $resource->folder_id,
+            'created_at' => $resource->created_at,
+            'updated_at' => $resource->updated_at
         ];
     }
 }
