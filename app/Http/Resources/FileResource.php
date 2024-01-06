@@ -20,12 +20,14 @@ class FileResource extends JsonResource
         $resource = $this->resource;
 
         return [
-          'id' => $resource->id,
-          'name' => $resource->name,
-          'serverPath' => $resource->serverPath,
-          'project_id' => $resource->project_id,
-          'folder_id' => $resource->folder_id,
-          'checkedBy' => User::find($resource->checked_in_by)?->username ?? null,
+            'id' => $resource->id,
+            'name' => $resource->name,
+            'serverPath' => $resource->serverPath,
+            'project_id' => $resource->project_id,
+            'folder_id' => $resource->folder_id,
+            'checkedBy' => User::find($resource->checked_in_by)?->username ?? null,
+            'created_at' => $resource->created_at,
+            'updated_at' => $resource->updated_at
         ];
     }
 }
