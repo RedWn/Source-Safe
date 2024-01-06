@@ -21,10 +21,10 @@ class ProjectController extends Controller
         ]);
 
         $project->users()->attach($request->user()->id);
+
         $root = $project->folders()->create([
             'name' => '/',
         ]);
-
         $project["root_id"] = $root->id;
         $project->save();
 
@@ -48,6 +48,8 @@ class ProjectController extends Controller
 
         $project->users()->detach();
         $project->files()->delete();
+        $project->root_id = null;
+        $project->save();
         $project->folders()->delete();
 
         $project->delete();
@@ -85,6 +87,19 @@ class ProjectController extends Controller
         $user = $project->users()->find($userID);
         if (!$user)
             return $this->error("User does not belong to project.");
+
+        if ($user->id == $project->admin_id) {
+            $project->users()->detach($userID);
+            $users = $project->users()->where("id", "!=", $user->id)->get();
+            if (count($users) == 0) {
+                self::delete($projectID);
+                return $this->success(message: "User and Project Deleted successfully");
+            } else {
+                $project->admin_id = $users->first()->id;
+                $project->save();
+                return $this->success(message: 'User removed successfully! Admin changed');
+            }
+        }
 
         $project->users()->detach($userID);
 
