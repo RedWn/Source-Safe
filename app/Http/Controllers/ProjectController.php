@@ -26,6 +26,7 @@ class ProjectController extends Controller
         ]);
 
         $project["root_id"] = $root->id;
+        $project->save();
 
         return $this->success(new ProjectResource($project), 'Project created successfully.', 201);
     }
