@@ -19,7 +19,7 @@ class CreateProjectTable extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('admin_id')->constrained('users');
-            $table->foreignId('root_id')->constrained('folders')->default(1);
+            $table->foreignId('root_id')->nullable()->constrained('folders');
             $table->timestamps();
         });
 
