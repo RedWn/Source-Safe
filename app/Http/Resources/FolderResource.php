@@ -17,9 +17,10 @@ class FolderResource extends JsonResource
     {
         /** @var Folder $resource */
         $resource = $this->resource;
-        
+
         return [
             'id' => $resource->id,
+            'name' => $resource->name,
             'project_id' => $resource->project_id,
             'folder_id' => $resource->folder_id,
         ];
