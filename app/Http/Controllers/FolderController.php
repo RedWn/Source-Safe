@@ -25,7 +25,7 @@ class FolderController extends Controller
 
         $folder = Folder::create([
             'name' => $request->input("name"),
-            'folder_id' => $request->input("folderID"),
+            'folder_id' => $parentFolder->id,
             'project_id' => $parentFolder->project_id,
         ]);
 
