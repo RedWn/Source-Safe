@@ -20,7 +20,7 @@ class CreateFolderTable extends Migration
             $table->string('name');
 
             $table->foreignId('project_id')->constrained();
-            $table->foreignId('folder_id')->nullable()->constrained();
+            $table->foreignId('folder_id')->nullable()->constrained()->cascadeOnDelete();
 
             $table->timestamps();
         });

@@ -6,6 +6,7 @@ use App\Http\Resources\ProjectResource;
 use App\Http\Resources\UserResource;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ProjectController extends Controller
 {
@@ -31,12 +32,15 @@ class ProjectController extends Controller
         return $this->success(new ProjectResource($project), 'Project created successfully.', 201);
     }
 
-    public function edit(Request $request, int $projectId)
+    public function edit(Request $request, int $projectID)
     {
         $request->validate([
             'name' => 'required|string|max:200',
         ]);
-        $project = Project::findOrFail($projectId);
+        $project = Project::findOrFail($projectID);
+
+        Gate::authorize('update-project', $projectID);
+
         $project->update(['name' => $request->input('name')]);
 
         return $this->success(message: 'Project edited successfully.');
@@ -46,8 +50,11 @@ class ProjectController extends Controller
     {
         $project = Project::findOrFail($projectID);
 
+        Gate::authorize('update-project', $projectID);
+
         $project->users()->detach();
         $project->files()->delete();
+
         $project->root_id = null;
         $project->save();
         $project->folders()->delete();
@@ -63,6 +70,9 @@ class ProjectController extends Controller
         ]);
 
         $project = Project::findOrFail($projectID);
+
+        Gate::authorize('update-project', $projectID);
+
         $userId = $request->input("userID");
         $user = $project->users()->find($userId);
 
@@ -82,23 +92,31 @@ class ProjectController extends Controller
         ]);
 
         $project = Project::findOrFail($projectID);
+
+        Gate::authorize('update-project', $projectID);
+
         $userID = $request->input("userID");
 
         $user = $project->users()->find($userID);
-        if (!$user)
+
+        if (!$user) {
             return $this->error("User does not belong to project.");
+        }
 
         if ($user->id == $project->admin_id) {
             $project->users()->detach($userID);
             $users = $project->users()->where("id", "!=", $user->id)->get();
+
+            // Delete project if 0 members are remaining
             if (count($users) == 0) {
                 self::delete($projectID);
                 return $this->success(message: "User and Project Deleted successfully");
-            } else {
-                $project->admin_id = $users->first()->id;
-                $project->save();
-                return $this->success(message: 'User removed successfully! Admin changed');
             }
+
+            // Assign one of the members the admin role (sorted by created_at)
+            $project->admin_id = $users->first()->id;
+            $project->save();
+            return $this->success(message: 'User removed successfully! Admin changed');
         }
 
         $project->users()->detach($userID);

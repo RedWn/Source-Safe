@@ -23,13 +23,7 @@ class LocalFileDiskManager
     {
         return storage_path() . "\\" . $fileID;
     }
-
-    public static function fileExists($fileID): bool
-    {
-        $file = File::findOrFail($fileID);
-        return file_exists($file["serverPath"]);
-    }
-
+ 
     public static function getFileToDownload($fileID): string
     {
         $file = File::findOrFail($fileID);

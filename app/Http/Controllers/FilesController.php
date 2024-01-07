@@ -6,6 +6,7 @@ use App\Custom\LocalFileDiskManager;
 use App\Models\File;
 use App\Models\Folder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\File as FileValidationRule;
 
 class FilesController extends Controller
@@ -15,21 +16,18 @@ class FilesController extends Controller
         $request->validate([
             'file' => FileValidationRule::default()->max('5mb'),
             'filename' => 'required|string|max:200',
-            'folderID' => 'required|exists:folders,id',
-            'projectID' => 'required|exists:projects,id'
+            'parent_folder_id' => 'required|exists:folders,id'
         ]);
 
+        $parentFolder = Folder::findOrFail($request->input("parent_folder_id"));
 
-        $rootFolder = Folder::findOrFail($request->input("folderID"));
-        if ($rootFolder->project_id != $request->input('projectID')) {
-            return $this->error("Selected folder doesn't belong to the project you're trying to add it in.");
-        }
+        Gate::authorize('update-project-resource', $parentFolder->project_id);
 
         $file = File::create([
             'serverPath' => '',
             'name' => $request->input("filename"),
-            'folder_id' => $request->input("folderID"),
-            'project_id' => $request->input("projectID"),
+            'folder_id' => $parentFolder->id,
+            'project_id' => $parentFolder->project_id,
         ]);
 
         $serverPath = LocalFileDiskManager::storeFile($request->file("file"), $file->id);
@@ -54,6 +52,9 @@ class FilesController extends Controller
     public function delete(int $fileId)
     {
         $file = File::findOrFail($fileId);
+
+        Gate::authorize('update-project-resource', $file->project_id);
+
         LocalFileDiskManager::deleteFile($fileId);
         $file->delete();
 

@@ -34,7 +34,8 @@ class DatabaseSeeder extends Seeder
                 'folder_id' => random_int(1, 10),
             ])->create();
 
-        User::create(['username' => 'hasan', 'password' => '1234']);
+        $user = User::create(['username' => 'hasan', 'password' => '1234']);
+        $user->projects()->attach(1);
 
         Schema::enableForeignKeyConstraints();
     }

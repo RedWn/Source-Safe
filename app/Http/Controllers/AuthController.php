@@ -32,7 +32,6 @@ class AuthController extends Controller
             'token' => $token,
             'user' => [
                 'username' => $user->username,
-                'Note from hasan the dev:' => 'We might include additional fields here.'
             ]
         ], message: "Login successfull!");
     }

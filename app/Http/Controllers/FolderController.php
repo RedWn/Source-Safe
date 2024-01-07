@@ -8,6 +8,7 @@ use App\Models\File;
 use App\Models\Folder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class FolderController extends Controller
 {
@@ -15,22 +16,37 @@ class FolderController extends Controller
     {
         $request->validate([
             'name' => 'required|string|min:1|max:255',
-            'folderID' => 'required|exists:folders,id',
-            'projectID' => 'required|exists:projects,id'
+            'parent_folder_id' => 'required|exists:folders,id',
         ]);
 
-        $rootFolder = Folder::findOrFail($request->input("folderID"));
-        if ($rootFolder->project_id != $request->input('projectID')) {
-            return $this->error("Selected folder doesn't belong to the project you're trying to add it in.");
-        }
+        $parentFolder = Folder::findOrFail($request->input("parent_folder_id"));
+
+        Gate::authorize("update-project-resource", $parentFolder->project_id);
 
         $folder = Folder::create([
             'name' => $request->input("name"),
             'folder_id' => $request->input("folderID"),
-            'project_id' => $request->input("projectID"),
+            'project_id' => $parentFolder->project_id,
         ]);
 
-        return $this->success(new FolderResource($folder), 'Folder added successfully', 201);
+        return $this->success(new FolderResource($folder), 'Folder created successfully', 201);
+    }
+
+    public function update(Request $request, int $folderId)
+    {
+        $request->validate([
+            'name' => 'required|string|min:1|max:255',
+        ]);
+
+        $folder = Folder::findOrFail($folderId);
+
+        Gate::authorize("update-project-resource", $folder->project_id);
+
+        $folder->update([
+            'name' => $request->input('name')
+        ]);
+
+        return $this->success(new FolderResource($folder), 'Folder updated successfully', 201);
     }
 
     public function getFolderContents(int $folderID)
@@ -48,12 +64,16 @@ class FolderController extends Controller
 
     public function delete(int $folderID)
     {
-        DB::transaction(function () use ($folderID) {
-            $folder = Folder::lockForUpdate()->findOrFail($folderID);
+        DB::beginTransaction();
 
-            $folder->files()->delete();
-            $folder->delete();
-        });
+        $folder = Folder::lockForUpdate()->findOrFail($folderID);
+
+        Gate::authorize("update-project-resource", $folder->project_id);
+
+        $folder->files()->delete();
+        $folder->delete();
+
+        DB::commit();
 
         return $this->success(message: "Folder deleted successfully.");
     }
