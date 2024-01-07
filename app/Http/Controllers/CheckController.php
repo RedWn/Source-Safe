@@ -54,7 +54,8 @@ class CheckController extends Controller
         }
 
         $requestFile = $request->file("file");
-        LocalFileDiskManager::storeFile($requestFile, $request->input('file_ids')[0]);
+        $file = File::findOrFail($request->input('file_ids')[0]);
+        LocalFileDiskManager::storeFile($requestFile, $file->id, $file->name);
 
         return $this->success(message: "File is checked out and updated.");
     }
