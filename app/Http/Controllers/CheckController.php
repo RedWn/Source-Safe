@@ -95,15 +95,6 @@ class CheckController extends Controller
 
         DB::commit();
 
-        $checkedInFileIds = $files
-            ->map(fn (File $file) => $file->id)
-            ->join(", ");
-
-        $username = $request->user()->username;
-        $duration = $request->input('checkoutDate');
-
-        Log::info("File(s) $checkedInFileIds were checked in by $username. Checkout date: $duration.");
-
         return $this->success(message: "File(s) checked in successfully!");
     }
 }
