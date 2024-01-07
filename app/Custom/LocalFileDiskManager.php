@@ -6,9 +6,9 @@ use App\Models\File;
 
 class LocalFileDiskManager
 {
-    public static function storeFile($file, $fileID): string
+    public static function storeFile($file, $fileID, $fileName): string
     {
-        $filePath = self::getFilePath($fileID);
+        $filePath = self::setFilePath($fileID . "-" . $fileName);
         move_uploaded_file($file, $filePath);
         return $filePath;
     }
@@ -19,21 +19,14 @@ class LocalFileDiskManager
         return unlink($file["serverPath"]);
     }
 
-    public static function getFilePath($fileID): string
-    {
-        return storage_path() . "\\" . $fileID;
-    }
- 
-    public static function getFileToDownload($fileID): string
+    public static function getFilePath(int $fileID): string
     {
         $file = File::findOrFail($fileID);
-        copy(self::getFilePath($fileID), storage_path() . "\\" . $file["name"]);
-        return storage_path() . "\\" . $file["name"];
+        return storage_path() . "\\" . $fileID . "-" . $file["name"];
     }
 
-    public static function deleteDownloadFile($fileID): bool
+    public static function setFilePath(string $fileName): string
     {
-        $file = File::findOrFail($fileID);
-        return unlink(storage_path() . "\\" . $file["name"]);
+        return storage_path() . "\\" . $fileName;
     }
 }
