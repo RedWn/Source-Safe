@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\File as FileValidationRule;
 
-class FilesController extends Controller
+class FileController extends Controller
 {
     public function upload(Request $request)
     {
