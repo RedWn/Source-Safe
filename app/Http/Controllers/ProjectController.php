@@ -7,6 +7,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
@@ -28,6 +29,8 @@ class ProjectController extends Controller
         ]);
         $project["root_id"] = $root->id;
         $project->save();
+
+        Log::info("Project $project->name was created.");
 
         return $this->success(new ProjectResource($project), 'Project created successfully.', 201);
     }

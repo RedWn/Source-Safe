@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CheckController extends Controller
 {
@@ -92,6 +93,15 @@ class CheckController extends Controller
         $files->toQuery()->update(['checked_in_by' => $userId]);
 
         DB::commit();
+
+        $checkedInFileIds = $files
+            ->map(fn (File $file) => $file->id)
+            ->join(", ");
+
+        $username = $request->user()->username;
+        $duration = $request->input('checkoutDate');
+
+        Log::info("File(s) $checkedInFileIds were checked in by $username. Checkout date: $duration.");
 
         return $this->success(message: "File(s) checked in successfully!");
     }
