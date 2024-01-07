@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CheckController;
-use App\Http\Controllers\FilesController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
@@ -28,10 +28,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::prefix('/files')->group(function () {
-        Route::post('/upload', [FilesController::class, 'upload']);
+        Route::post('/upload', [FileController::class, 'upload']);
 
-        Route::delete('/{id}', [FilesController::class, 'delete'])->whereNumber('id');
-        Route::get('/{id}/download', [FilesController::class, 'download'])->whereNumber('id');
+        Route::delete('/{id}', [FileController::class, 'delete'])->whereNumber('id');
+        Route::get('/{id}/download', [FileController::class, 'download'])->whereNumber('id');
 
         Route::post('/checkout', [CheckController::class, 'checkout']);
         Route::post('/checkin', [CheckController::class, 'checkin']);

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\File as FileValidationRule;
 
-class FilesController extends Controller
+class FileController extends Controller
 {
     public function upload(Request $request)
     {
@@ -30,7 +30,7 @@ class FilesController extends Controller
             'project_id' => $parentFolder->project_id,
         ]);
 
-        $serverPath = LocalFileDiskManager::storeFile($request->file("file"), $file->id);
+        $serverPath = LocalFileDiskManager::storeFile($request->file("file"), $file->id, $file->name);
         $file['serverPath'] = $serverPath;
 
         $file->save();
@@ -40,13 +40,7 @@ class FilesController extends Controller
 
     public function download(int $fileId)
     {
-        self::sendFile($fileId);
-        LocalFileDiskManager::deleteDownloadFile($fileId);
-    }
-
-    public function sendFile(int $fileId)
-    {
-        return response()->download(LocalFileDiskManager::getFileToDownload($fileId));
+        return response()->download(LocalFileDiskManager::getFilePath($fileId));
     }
 
     public function delete(int $fileId)
