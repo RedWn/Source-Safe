@@ -44,14 +44,18 @@ class FileController extends Controller
         return response()->download(LocalFileDiskManager::getFilePath($fileId));
     }
 
-    public function delete(int $fileId)
+    public function delete(Request $request, int $fileId)
     {
         $file = File::findOrFail($fileId);
 
         Gate::authorize('update-project-resource', $file->project_id);
 
+        if ($file->checked_in_by != $request->user()->id) {
+            return $this->error("Please check in file ($file->id) before deleting", 403);
+        }
+
+        $file->checkins()->delete();
         LocalFileDiskManager::deleteFile($fileId);
-        $file->delete();
 
         return $this->success(message: 'Deleted file successfully!');
     }
