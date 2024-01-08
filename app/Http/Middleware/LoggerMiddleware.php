@@ -20,8 +20,9 @@ class LoggerMiddleware
         $response = $next($request);
 
         // if (app()->environment('local')) {
+        //     $url = substr($request->getUri(), strpos($request->getUri(), "api/") + 4);
         //     $log = [
-        //         'URI' => substr($request->getUri(), strpos($request->getUri(), "api/") + 4),
+        //         'URI' => str_replace('\/', '/', $url),
         //         'method' => $request->getMethod(),
         //         'user' => $request->user()->username
         //     ];
@@ -43,7 +44,7 @@ class LoggerMiddleware
         //         $log["name"] = $request->name;
         //     }
 
-        //     Log::info(json_encode($log));
+        // Log::info(json_encode($log));
         // }
 
         return $response;
