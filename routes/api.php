@@ -34,6 +34,8 @@ Route::get('/searchUsers/{name}', [UserController::class, 'search'])->whereAlpha
 
             Route::post('/checkout', [CheckController::class, 'checkout']);
             Route::post('/checkin', [CheckController::class, 'checkin']);
+
+            Route::get('/{id}/report', [FileController::class, 'report'])->whereNumber('id');
         });
 
         Route::prefix('/folders')->group(function () {

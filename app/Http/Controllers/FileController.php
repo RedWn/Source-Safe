@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Custom\LocalFileDiskManager;
+use App\Models\Checkin;
 use App\Models\File;
 use App\Models\Folder;
 use Illuminate\Http\Request;
@@ -53,5 +54,21 @@ class FileController extends Controller
         $file->delete();
 
         return $this->success(message: 'Deleted file successfully!');
+    }
+
+    public function report(int $fileId)
+    {
+        $entries = Checkin::where('file_id', $fileId)
+            ->select('created_at', 'updated_at', 'user_id', 'checkout_date', 'done')
+            ->get();
+        // $array = $entries->toArray();
+        $array = array();
+        foreach ($entries as $entry) {
+            $array[] = [$entry->created_at, 'check in', $entry->user_id, $entry->checkout_date];
+            if ($entry->done == 1) {
+                $array[] = [$entry->updated_at, 'check out', $entry->user_id, $entry->checkout_date];
+            }
+        }
+        return response()->download(LocalFileDiskManager::writetoCSV($fileId, $array));
     }
 }

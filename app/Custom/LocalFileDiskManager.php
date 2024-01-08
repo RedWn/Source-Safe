@@ -29,4 +29,15 @@ class LocalFileDiskManager
     {
         return storage_path() . "\\" . $fileName;
     }
+
+    public static function writetoCSV($id, $list): string
+    {
+        $filepath = $id . '-report.csv';
+        $fp = fopen($filepath, 'w');
+        foreach ($list as $field) {
+            fputcsv($fp, $field);
+        }
+        fclose($fp);
+        return $filepath;
+    }
 }
