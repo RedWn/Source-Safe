@@ -82,7 +82,8 @@ class CheckController extends Controller
         }
 
         foreach ($files as $file) {
-            Checkin::insert([
+            //insert leaves timestamps as null
+            Checkin::create([
                 'file_id' => $file->id,
                 'user_id' => $userId,
                 'done' => false,
