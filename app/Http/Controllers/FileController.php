@@ -56,6 +56,7 @@ class FileController extends Controller
 
         $file->checkins()->delete();
         LocalFileDiskManager::deleteFile($fileId);
+        $file->delete();
 
         return $this->success(message: 'Deleted file successfully!');
     }
