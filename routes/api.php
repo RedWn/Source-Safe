@@ -23,7 +23,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/searchUsers/{name}', [UserController::class, 'search'])->whereAlpha('name');
 
-Route::middleware('logger')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
 
@@ -58,4 +57,3 @@ Route::middleware('logger')->group(function () {
             Route::get('/projects', [ProjectController::class, 'getMyProjects']);
         });
     });
-});

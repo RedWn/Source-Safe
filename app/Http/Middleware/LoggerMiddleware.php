@@ -19,32 +19,32 @@ class LoggerMiddleware
     {
         $response = $next($request);
 
-        if (app()->environment('local')) {
-            $log = [
-                'URI' => substr($request->getUri(), strpos($request->getUri(), "api/") + 4),
-                'method' => $request->getMethod(),
-                'user' => $request->user()->username
-            ];
-            if ($request->has("fileIDs")) {
-                $log["fileIDs"] = $request->fileIDs;
-            }
-            if ($request->has("file_ids")) {
-                $log["file_ids"] = $request->file_ids;
-            }
-            if ($request->has("parent_folder_id")) {
-                $log["parent_folder_id"] = $request->parent_folder_id;
-                $parentFolder = Folder::findOrFail($request->input("parent_folder_id"));
-                $log['project_id'] = $parentFolder->project_id;
-            }
-            if ($request->has("filename")) {
-                $log["filename"] = $request->filename;
-            }
-            if ($request->has("name")) {
-                $log["name"] = $request->name;
-            }
+        // if (app()->environment('local')) {
+        //     $log = [
+        //         'URI' => substr($request->getUri(), strpos($request->getUri(), "api/") + 4),
+        //         'method' => $request->getMethod(),
+        //         'user' => $request->user()->username
+        //     ];
+        //     if ($request->has("fileIDs")) {
+        //         $log["fileIDs"] = $request->fileIDs;
+        //     }
+        //     if ($request->has("file_ids")) {
+        //         $log["file_ids"] = $request->file_ids;
+        //     }
+        //     if ($request->has("parent_folder_id")) {
+        //         $log["parent_folder_id"] = $request->parent_folder_id;
+        //         $parentFolder = Folder::findOrFail($request->input("parent_folder_id"));
+        //         $log['project_id'] = $parentFolder->project_id;
+        //     }
+        //     if ($request->has("filename")) {
+        //         $log["filename"] = $request->filename;
+        //     }
+        //     if ($request->has("name")) {
+        //         $log["name"] = $request->name;
+        //     }
 
-            Log::info(json_encode($log));
-        }
+        //     Log::info(json_encode($log));
+        // }
 
         return $response;
     }

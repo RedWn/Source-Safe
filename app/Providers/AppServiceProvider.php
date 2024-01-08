@@ -21,6 +21,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Reason: https://laravel-news.com/shouldbestrict
-        Model::shouldBeStrict();
+        // Model::shouldBeStrict();
     }
 }
