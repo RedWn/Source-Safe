@@ -18,3 +18,6 @@ yarn-error.log
 /.idea
 /.vscode
 /storage
+
+adminer
+resources/node_modules
