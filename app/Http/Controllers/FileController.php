@@ -61,8 +61,8 @@ class FileController extends Controller
         $entries = Checkin::where('file_id', $fileId)
             ->select('created_at', 'updated_at', 'user_id', 'checkout_date', 'done')
             ->get();
-        // $array = $entries->toArray();
         $array = array();
+        $array[] = ['Time', 'Operation', 'user_id', 'checkout_date'];
         foreach ($entries as $entry) {
             $array[] = [$entry->created_at, 'check in', $entry->user_id, $entry->checkout_date];
             if ($entry->done == 1) {
