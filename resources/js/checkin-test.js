@@ -1,10 +1,9 @@
 import { check } from "k6";
+import dayjs  from "dayjs"
 import http from "k6/http";
 
 export const options = {
-    // A number specifying the number of VUs to run concurrently.
     vus: 100,
-    // A string specifying the total duration of the test run.
     duration: "1s",
 };
 
@@ -29,12 +28,14 @@ export default function () {
 
     const token = loginResponse.json().data.token;
 
-    // TODO: THE DATE STRING IS HARDCODED RIGHT NOW
-    const checkinPayload = JSON.stringify({ checkoutDate: "2024-01-09", fileIDs: [1] });
+    // Take a look at "CheckController" to learn about valid checkout date format.
+    const checkoutDate = dayjs().add(1, "day").format("YYYY-MM-DD");
+
+    const checkinPayload = JSON.stringify({ checkoutDate, fileIDs: [1] });
     const checkinHeaders = Object.assign({ Authorization: `Bearer ${token}` }, COMMON_HEADERS);
     const checkinResponse = http.post(`${BASE_URL}/files/checkin`, checkinPayload, { headers: checkinHeaders });
 
     check(checkinResponse, {
-        "Status is 200": (r) => r.status == 200,
+        "200 Status": (r) => r.status == 200,
     });
 }

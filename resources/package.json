@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/k6": "^0.48.0"
+    "@types/k6": "^0.48.0",
+    "dayjs": "^1.11.10"
   }
 }
