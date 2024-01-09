@@ -8,16 +8,6 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
 // Public Routes
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -31,15 +21,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::prefix('/files')->group(function () {
-        Route::post('/upload', [FileController::class, 'upload']);
-
         Route::delete('/{id}', [FileController::class, 'delete'])->whereNumber('id');
         Route::get('/{id}/download', [FileController::class, 'download'])->whereNumber('id');
+        Route::get('/{id}/report', [FileController::class, 'report'])->whereNumber('id');
 
+        Route::post('/upload', [FileController::class, 'upload']);
         Route::post('/checkout', [CheckController::class, 'checkout']);
         Route::post('/checkin', [CheckController::class, 'checkin']);
-
-        Route::get('/{id}/report', [FileController::class, 'report'])->whereNumber('id');
     });
 
     Route::prefix('/folders')->group(function () {
