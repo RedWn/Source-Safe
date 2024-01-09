@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class CheckController extends Controller
 {
@@ -82,7 +81,7 @@ class CheckController extends Controller
         }
 
         foreach ($files as $file) {
-            //insert leaves timestamps as null
+            // Use create instead of insert, because insert leaves timestamps as null
             Checkin::create([
                 'file_id' => $file->id,
                 'user_id' => $userId,
