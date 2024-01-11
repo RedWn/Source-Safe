@@ -1,5 +1,4 @@
 import { check } from "k6";
-import dayjs  from "dayjs"
 import http from "k6/http";
 
 export const options = {
@@ -18,18 +17,11 @@ export default function () {
 
     const loginPayload = JSON.stringify(defaultUser);
     const loginResponse = http.post(`${BASE_URL}/login`, loginPayload, { headers: COMMON_HEADERS });
-
-    // Please leave this ninja hack as is, the stress test sometimes fails without it.
-    try {
-        loginResponse.json();
-    } catch (error) {
-        console.log(error);
-    }
-
     const token = loginResponse.json().data.token;
 
     // Take a look at "CheckController" to learn about valid checkout date format.
-    const checkoutDate = dayjs().add(1, "day").format("YYYY-MM-DD");
+    // Today < checkoutDate <= 3 days
+    const checkoutDate = "2024-01-12";
 
     const checkinPayload = JSON.stringify({ checkoutDate, fileIDs: [1] });
     const checkinHeaders = Object.assign({ Authorization: `Bearer ${token}` }, COMMON_HEADERS);
