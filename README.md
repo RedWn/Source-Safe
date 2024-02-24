@@ -2,6 +2,10 @@
 
 A 5th-year university project for the Network Applications course. It's a minimal clone of the concepts found in [Microsoft's Visual SourceSafe](https://en.wikipedia.org/wiki/Microsoft_Visual_SourceSafe)
 
+## Introduction
+
+The application is divided into two parts: the front-end and the back-end. The front-end, which is what you're currently viewing, is written in Dart using the Flutter framework. The back-end can be found [here](https://github.com/IyadAlanssary/Source-Safe).
+
 ## Features
 
 -   Upload/Download files from the projects that you're in.
