@@ -4,7 +4,7 @@ A 5th-year university project for the Network Applications course. It's a minima
 
 ## Introduction
 
-The application is divided into two parts: the front-end and the back-end. The front-end, which is what you're currently viewing, is written in Dart using the Flutter framework. The back-end can be found [here](https://github.com/IyadAlanssary/Source-Safe).
+The application is divided into two parts: the front-end and the back-end. The back-end, which is what you're currently viewing, is written in PHP using Laravel. The front-end can be found [here](https://github.com/IyadAlanssary/Source-Safe).
 
 ## Features
 
